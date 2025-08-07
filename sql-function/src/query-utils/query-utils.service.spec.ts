@@ -51,6 +51,17 @@ describe('QueryUtilsService', () => {
       const result = service.innerJoin(leftTable, rightTable, options);
       expect(result).toEqual([]);
     });
+
+    it('should return an empty array if either table is empty', () => {
+      const leftTable: Record<string, unknown>[] = [];
+      const rightTable: Record<string, unknown>[] = [
+        { userId: 1, city: 'New York' },
+      ];
+      const options = { leftKey: 'id', rightKey: 'userId' };
+
+      const result = service.innerJoin(leftTable, rightTable, options);
+      expect(result).toEqual([]);
+    });
   });
 
   describe('leftJoin', () => {
