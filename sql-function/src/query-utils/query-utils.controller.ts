@@ -12,4 +12,20 @@ export class QueryUtilsController {
   ) {
     return this.queryUtilsService.innerJoin(leftTable, rightTable, options);
   }
+
+  leftJoin(
+    leftTable: Record<string, unknown>[],
+    rightTable: Record<string, unknown>[],
+    options: JoinOptions,
+  ) {
+    return this.queryUtilsService.leftJoin(leftTable, rightTable, options);
+  }
+
+  rightJoin(
+    leftTable: Record<string, unknown>[],
+    rightTable: Record<string, unknown>[],
+    options: JoinOptions,
+  ) {
+    return this.queryUtilsService.rightJoin(leftTable, rightTable, options);
+  }
 }

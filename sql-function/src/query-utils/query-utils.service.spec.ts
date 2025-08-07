@@ -18,12 +18,12 @@ describe('QueryUtilsService', () => {
 
   describe('innerJoin', () => {
     it('should return joined records based on matching keys', () => {
-      const leftTable = [
+      const leftTable: Record<string, unknown>[] = [
         { id: 1, name: 'Alice' },
         { id: 2, name: 'Bob' },
         { id: 3, name: 'Charlie' },
       ];
-      const rightTable = [
+      const rightTable: Record<string, unknown>[] = [
         { userId: 1, city: 'New York' },
         { userId: 2, city: 'London' },
         { userId: 4, city: 'Paris' },
@@ -38,17 +38,112 @@ describe('QueryUtilsService', () => {
     });
 
     it('should return an empty array if no matches are found', () => {
-      const leftTable = [
+      const leftTable: Record<string, unknown>[] = [
         { id: 1, name: 'Alice' },
         { id: 2, name: 'Bob' },
       ];
-      const rightTable = [
+      const rightTable: Record<string, unknown>[] = [
         { userId: 3, city: 'Paris' },
         { userId: 4, city: 'Berlin' },
       ];
       const options = { leftKey: 'id', rightKey: 'userId' };
 
       const result = service.innerJoin(leftTable, rightTable, options);
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('leftJoin', () => {
+    it('should return all records from left table and matched records from right table', () => {
+      const leftTable: Record<string, unknown>[] = [
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' },
+        { id: 3, name: 'Charlie' },
+      ];
+      const rightTable: Record<string, unknown>[] = [
+        { userId: 1, city: 'New York' },
+        { userId: 2, city: 'London' },
+      ];
+      const options = { leftKey: 'id', rightKey: 'userId' };
+
+      const result = service.leftJoin(leftTable, rightTable, options);
+      expect(result).toEqual([
+        { id: 1, name: 'Alice', userId: 1, city: 'New York' },
+        { id: 2, name: 'Bob', userId: 2, city: 'London' },
+        { id: 3, name: 'Charlie', userId: null },
+      ]);
+    });
+
+    it('should return all left table records if right table is empty', () => {
+      const leftTable: Record<string, unknown>[] = [
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' },
+      ];
+      const rightTable: Record<string, unknown>[] = [];
+
+      const options = { leftKey: 'id', rightKey: 'userId' };
+
+      const result = service.leftJoin(leftTable, rightTable, options);
+      expect(result).toEqual([
+        { id: 1, name: 'Alice', userId: null },
+        { id: 2, name: 'Bob', userId: null },
+      ]);
+    });
+
+    it('should return empty array if left table is empty', () => {
+      const leftTable: Record<string, unknown>[] = [];
+      const rightTable: Record<string, unknown>[] = [
+        { userId: 1, city: 'New York' },
+      ];
+      const options = { leftKey: 'id', rightKey: 'userId' };
+
+      const result = service.leftJoin(leftTable, rightTable, options);
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('rightJoin', () => {
+    it('should return all records from right table and matched records from left table', () => {
+      const leftTable: Record<string, unknown>[] = [
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' },
+      ];
+      const rightTable: Record<string, unknown>[] = [
+        { userId: 1, city: 'New York' },
+        { userId: 2, city: 'London' },
+        { userId: 3, city: 'Paris' },
+      ];
+      const options = { leftKey: 'id', rightKey: 'userId' };
+
+      const result = service.rightJoin(leftTable, rightTable, options);
+      expect(result).toEqual([
+        { id: 1, name: 'Alice', userId: 1, city: 'New York' },
+        { id: 2, name: 'Bob', userId: 2, city: 'London' },
+        { id: null, name: null, userId: 3, city: 'Paris' },
+      ]);
+    });
+
+    it('should return all right table records if left table is empty', () => {
+      const leftTable: Record<string, unknown>[] = [];
+      const rightTable: Record<string, unknown>[] = [
+        { userId: 1, city: 'New York' },
+        { userId: 2, city: 'London' },
+      ];
+      const options = { leftKey: 'id', rightKey: 'userId' };
+
+      const result = service.rightJoin(leftTable, rightTable, options);
+      expect(result).toEqual([
+        { id: null, name: null, userId: 1, city: 'New York' },
+        { id: null, name: null, userId: 2, city: 'London' },
+      ]);
+    });
+
+    it('should return empty array if right table is empty', () => {
+      const leftTable: Record<string, unknown>[] = [{ id: 1, name: 'Alice' }];
+      const rightTable: Record<string, unknown>[] = [];
+      const options = { leftKey: 'id', rightKey: 'userId' };
+
+      const result = service.rightJoin(leftTable, rightTable, options);
       expect(result).toEqual([]);
     });
   });
