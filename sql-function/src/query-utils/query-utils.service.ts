@@ -68,4 +68,19 @@ export class QueryUtilsService {
 
     return result;
   }
+
+  where(
+    table: Record<string, unknown>[],
+    conditions: (record: Record<string, unknown>) => boolean,
+  ): Record<string, unknown>[] {
+    const result: Record<string, unknown>[] = [];
+
+    for (const record of table) {
+      if (conditions(record)) {
+        result.push(record);
+      }
+    }
+
+    return result;
+  }
 }

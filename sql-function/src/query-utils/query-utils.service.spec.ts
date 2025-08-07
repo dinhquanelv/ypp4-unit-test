@@ -112,4 +112,28 @@ describe('QueryUtilsService', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('where', () => {
+    it('should filter records based on the provided conditions', () => {
+      const conditions = (record: Record<string, unknown>) =>
+        (record.id as number) > 1;
+      const result = service.where(leftTable, conditions);
+      expect(result).toEqual([
+        { id: 2, name: 'Bob' },
+        { id: 3, name: 'Charlie' },
+      ]);
+    });
+
+    it('should return an empty array if no records match the conditions', () => {
+      const conditions = (record: Record<string, unknown>) =>
+        (record.id as number) <= 0;
+      const result = service.where(leftTable, conditions);
+      expect(result).toEqual([]);
+    });
+
+    it('should return all records if no conditions are provided', () => {
+      const result = service.where(leftTable, () => true);
+      expect(result).toEqual(leftTable);
+    });
+  });
 });
