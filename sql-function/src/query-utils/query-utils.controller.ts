@@ -8,16 +8,23 @@ export class QueryUtilsController {
   innerJoin(
     leftTable: Record<string, unknown>[],
     rightTable: Record<string, unknown>[],
-    options: JoinOptions,
+    joinOptions: JoinOptions,
   ) {
-    return this.queryUtilsService.innerJoin(leftTable, rightTable, options);
+    return this.queryUtilsService.innerJoin(leftTable, rightTable, joinOptions);
   }
 
   leftJoin(
     leftTable: Record<string, unknown>[],
     rightTable: Record<string, unknown>[],
-    options: JoinOptions,
+    joinOptions: JoinOptions,
   ) {
-    return this.queryUtilsService.leftJoin(leftTable, rightTable, options);
+    return this.queryUtilsService.leftJoin(leftTable, rightTable, joinOptions);
+  }
+
+  crossJoin(
+    leftTable: Record<string, unknown>[],
+    rightTable: Record<string, unknown>[],
+  ) {
+    return this.queryUtilsService.crossJoin(leftTable, rightTable);
   }
 }
