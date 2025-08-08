@@ -7,12 +7,12 @@ export interface JoinOptions {
 
 @Injectable()
 export class QueryUtilsService {
-  innerJoin(
-    leftTable: Record<string, unknown>[],
-    rightTable: Record<string, unknown>[],
+  innerJoin<L, R>(
+    leftTable: L[],
+    rightTable: R[],
     joinOptions: JoinOptions,
-  ): Record<string, unknown>[] {
-    const result: Record<string, unknown>[] = [];
+  ): (L & R)[] {
+    const result: (L & R)[] = [];
 
     for (const left of leftTable) {
       for (const right of rightTable) {
@@ -25,36 +25,36 @@ export class QueryUtilsService {
     return result;
   }
 
-  leftJoin(
-    leftTable: Record<string, unknown>[],
-    rightTable: Record<string, unknown>[],
+  leftJoin<L, R>(
+    leftTable: L[],
+    rightTable: R[],
     joinOptions: JoinOptions,
-  ): Record<string, unknown>[] {
-    const result: Record<string, unknown>[] = [];
+  ): (L & Partial<R>)[] {
+    const result: (L & Partial<R>)[] = [];
 
     for (const left of leftTable) {
       let hasMatch: boolean = false;
 
       for (const right of rightTable) {
         if (left[joinOptions.leftKey] === right[joinOptions.rightKey]) {
-          result.push({ ...left, ...right });
+          result.push({ ...left, ...right } as L & Partial<R>);
           hasMatch = true;
         }
       }
 
       if (!hasMatch) {
-        result.push({ ...left, [joinOptions.rightKey]: null });
+        result.push({
+          ...left,
+          [joinOptions.rightKey]: null,
+        } as L & Partial<R>);
       }
     }
 
     return result;
   }
 
-  crossJoin(
-    leftTable: Record<string, unknown>[],
-    rightTable: Record<string, unknown>[],
-  ) {
-    const result: Record<string, unknown>[] = [];
+  crossJoin<L, R>(leftTable: L[], rightTable: R[]): (L & R)[] {
+    const result: (L & R)[] = [];
 
     if (leftTable.length === 0 || rightTable.length === 0) {
       return result;
@@ -63,6 +63,18 @@ export class QueryUtilsService {
     for (const left of leftTable) {
       for (const right of rightTable) {
         result.push({ ...left, ...right });
+      }
+    }
+
+    return result;
+  }
+
+  where<T>(table: T[], conditions: (record: T) => boolean): T[] {
+    const result: T[] = [];
+
+    for (const record of table) {
+      if (conditions(record)) {
+        result.push(record);
       }
     }
 

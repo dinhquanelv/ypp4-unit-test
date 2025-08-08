@@ -5,26 +5,27 @@ import { JoinOptions, QueryUtilsService } from './query-utils.service';
 export class QueryUtilsController {
   constructor(private readonly queryUtilsService: QueryUtilsService) {}
 
-  innerJoin(
-    leftTable: Record<string, unknown>[],
-    rightTable: Record<string, unknown>[],
+  innerJoin<L, R>(
+    leftTable: L[],
+    rightTable: R[],
     joinOptions: JoinOptions,
-  ) {
+  ): (L & R)[] {
     return this.queryUtilsService.innerJoin(leftTable, rightTable, joinOptions);
   }
 
-  leftJoin(
-    leftTable: Record<string, unknown>[],
-    rightTable: Record<string, unknown>[],
+  leftJoin<L, R>(
+    leftTable: L[],
+    rightTable: R[],
     joinOptions: JoinOptions,
-  ) {
+  ): (L & Partial<R>)[] {
     return this.queryUtilsService.leftJoin(leftTable, rightTable, joinOptions);
   }
 
-  crossJoin(
-    leftTable: Record<string, unknown>[],
-    rightTable: Record<string, unknown>[],
-  ) {
+  crossJoin<L, R>(leftTable: L[], rightTable: R[]): (L & R)[] {
     return this.queryUtilsService.crossJoin(leftTable, rightTable);
+  }
+
+  where<T>(table: T[], conditions: (record: T) => boolean): T[] {
+    return this.queryUtilsService.where(table, conditions);
   }
 }
