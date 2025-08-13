@@ -1,4 +1,4 @@
-export class FindByProviderIdDto {
+export class FindAllByProviderIdDto {
   listTemplateId: number;
   headerImage: string;
   title: string;
