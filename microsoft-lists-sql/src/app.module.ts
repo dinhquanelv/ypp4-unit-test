@@ -8,12 +8,8 @@ import { ListModule } from './modules/list/list.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      password: 'dinhquan11',
-      username: 'postgres',
-      database: 'MicrosoftLists',
+      type: 'sqlite',
+      database: 'database.sqlite',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
