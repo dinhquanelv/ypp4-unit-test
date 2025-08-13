@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { TemplateService } from './template.service';
 import { TemplateController } from './template.controller';
+import { ListTemplate } from '../../entities/list-template.entity';
+import { TemplateRepository } from '../../modules/template/template.repository';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([ListTemplate])],
   controllers: [TemplateController],
-  providers: [TemplateService],
+  providers: [TemplateService, TemplateRepository],
 })
 export class TemplateModule {}
