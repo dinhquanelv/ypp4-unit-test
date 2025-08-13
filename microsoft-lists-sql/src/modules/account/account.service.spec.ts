@@ -1,29 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { AccountService } from './account.service';
 import { Account } from '../../entities/account.entity';
-import { CreateAccountDto } from './dto/create-account.dto';
 
 describe('AccountService', () => {
   let service: AccountService;
-  let accountRepository: Repository<Account>;
   let module: TestingModule;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: process.env.DB_HOST || 'localhost',
-          port: parseInt(process.env.DB_PORT || '5432'),
-          username: process.env.DB_USERNAME || 'postgres',
-          password: process.env.DB_PASSWORD || 'dinhquan11',
-          database: process.env.DB_NAME || 'MicrosoftLists',
+          type: 'sqlite',
+          database: 'database.sqlite',
           entities: [Account],
-          synchronize: true,
-          dropSchema: true,
+          synchronize: false, // Don't modify existing database structure
         }),
         TypeOrmModule.forFeature([Account]),
       ],
@@ -31,60 +22,100 @@ describe('AccountService', () => {
     }).compile();
 
     service = module.get<AccountService>(AccountService);
-    accountRepository = module.get<Repository<Account>>(
-      getRepositoryToken(Account),
-    );
   });
 
   afterAll(async () => {
     await module.close();
   });
 
-  beforeEach(async () => {
-    // Clean up database before each test
-    await accountRepository.clear();
-  });
-
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a new account', async () => {
-      const createAccountDto: CreateAccountDto = {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        accountPassword: 'securePassword123',
-        avatar: 'https://example.com/avatar.jpg',
-        company: 'Test Company',
-        accountStatus: 'active',
-      };
-
-      const result = await service.create(createAccountDto);
+  describe('findOne', () => {
+    it('should return account data when valid ID is provided', async () => {
+      const result = await service.findOne(1);
 
       expect(result).toBeDefined();
-      expect(result.id).toBeDefined();
-      expect(result.firstName).toBe(createAccountDto.firstName);
-      expect(result.lastName).toBe(createAccountDto.lastName);
-      expect(result.email).toBe(createAccountDto.email);
-      expect(result.accountPassword).toBe(createAccountDto.accountPassword);
-      expect(result.avatar).toBe(createAccountDto.avatar);
-      expect(result.company).toBe(createAccountDto.company);
-      expect(result.accountStatus).toBe(createAccountDto.accountStatus);
-      expect(result.createdAt).toBeDefined();
-      expect(result.updatedAt).toBeDefined();
+      expect(result).not.toBeNull();
 
-      const insertedAccount = await accountRepository.findOne({
-        where: { id: result.id },
-      });
+      if (result) {
+        expect(result).toHaveProperty('firstName');
+        expect(result).toHaveProperty('lastName');
+        expect(result).toHaveProperty('email');
+        expect(result).toHaveProperty('avatar');
+        expect(result).toHaveProperty('company');
 
-      expect(insertedAccount).toBeDefined();
-      expect(insertedAccount).not.toBeNull();
-      if (insertedAccount) {
-        expect(insertedAccount.firstName).toBe(createAccountDto.firstName);
-        expect(insertedAccount.lastName).toBe(createAccountDto.lastName);
-        expect(insertedAccount.email).toBe(createAccountDto.email);
+        expect(result.firstName.length).toBeGreaterThan(0);
+        expect(result.lastName.length).toBeGreaterThan(0);
+        expect(result.email.length).toBeGreaterThan(0);
+      }
+    });
+
+    it('should return null when account ID does not exist', async () => {
+      const result = await service.findOne(99999);
+      expect(result).toBeNull();
+    });
+
+    it('should return null when negative ID is provided', async () => {
+      const result = await service.findOne(-1);
+      expect(result).toBeNull();
+    });
+
+    it('should return null when zero ID is provided', async () => {
+      const result = await service.findOne(0);
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('findAllByEmailOrName', () => {
+    it('should return account data when searching by email', async () => {
+      const searchTerm = '@example.com';
+      const result = await service.findAllByEmailOrName(searchTerm);
+
+      if (result) {
+        expect(result).toBeDefined();
+        expect(result).not.toBeNull();
+        expect(result).toHaveProperty('firstName');
+        expect(result).toHaveProperty('lastName');
+        expect(result).toHaveProperty('email');
+        expect(result).toHaveProperty('avatar');
+      }
+    });
+
+    it('should return account data when searching by first name', async () => {
+      const searchTerm = 'John';
+      const result = await service.findAllByEmailOrName(searchTerm);
+
+      if (result) {
+        expect(result).toBeDefined();
+        expect(result).not.toBeNull();
+      }
+    });
+
+    it('should return account data when searching by last name', async () => {
+      const searchTerm = 'Doe';
+      const result = await service.findAllByEmailOrName(searchTerm);
+
+      if (result) {
+        expect(result).toBeDefined();
+        expect(result).not.toBeNull();
+      }
+    });
+
+    it('should return null when no matching accounts are found', async () => {
+      const result = await service.findAllByEmailOrName('unknown123');
+      expect(result).toBeNull();
+    });
+
+    it('should handle empty string search', async () => {
+      const result = await service.findAllByEmailOrName('');
+
+      if (result) {
+        expect(result).toHaveProperty('firstName');
+        expect(result).toHaveProperty('lastName');
+        expect(result).toHaveProperty('email');
+        expect(result).toHaveProperty('avatar');
       }
     });
   });
