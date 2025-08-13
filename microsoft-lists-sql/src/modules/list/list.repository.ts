@@ -155,8 +155,33 @@ export class ListRepository {
     return list.length > 0 ? list[0] : null;
   }
 
-  async findOneListById(id: number): Promise<FindOneListDto | null> {
-    const list: FindOneListDto = await this.listRepository.query(``);
-    return list;
+  async findOneListById(
+    accountId: number,
+    listId: number,
+  ): Promise<FindOneListDto | null> {
+    const list: FindOneListDto[] = await this.listRepository.query(
+      `
+        SELECT
+            l.Id AS listId,
+            l.Icon AS icon,
+            l.Color AS color,
+            w.WorkspaceName AS workspaceName,
+            l.ListName AS listName,
+            CASE
+                WHEN fl.Id IS NOT NULL THEN 1
+                ELSE 0
+            END AS isFavoriteList
+        FROM
+            List l
+            JOIN Account a ON a.Id = ?
+            JOIN Workspace w ON w.Id = l.WorkspaceId
+            LEFT JOIN FavoriteList fl ON fl.ListId = l.Id
+            AND fl.FavoredBy = ?
+        WHERE
+            l.Id = ?
+        `,
+      [accountId, accountId, listId],
+    );
+    return list.length > 0 ? list[0] : null;
   }
 }

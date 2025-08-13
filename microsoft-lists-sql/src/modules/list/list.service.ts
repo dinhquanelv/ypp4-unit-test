@@ -49,7 +49,10 @@ export class ListService {
     return await this.listRepository.findOneListType(listTypeId);
   }
 
-  async findOneListById(id: number): Promise<FindOneListDto | null> {
-    return await this.listRepository.findOneListById(id);
+  async findOneListById(
+    accountId: number,
+    listId: number,
+  ): Promise<FindOneListDto | null> {
+    return await this.listRepository.findOneListById(accountId, listId);
   }
 }

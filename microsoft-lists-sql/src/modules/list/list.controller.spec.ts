@@ -156,4 +156,44 @@ describe('ListController', () => {
       expect(result).toBeNull();
     });
   });
+
+  describe('findOneListById', () => {
+    it('should return a list if it exists', async () => {
+      const accountId = 1;
+      const listId = 1;
+      const result = await controller.findOneListById(accountId, listId);
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('listId');
+      expect(result).toHaveProperty('icon');
+      expect(result).toHaveProperty('color');
+      expect(result).toHaveProperty('listName');
+      expect(result).toHaveProperty('workspaceName');
+      expect(result).toHaveProperty('isFavoriteList');
+    });
+
+    it('should return null if the list does not exist', async () => {
+      const accountId = 1;
+      const listId = -1;
+      const result = await controller.findOneListById(accountId, listId);
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null if account does not exist', async () => {
+      const accountId = -1;
+      const listId = 1;
+      const result = await controller.findOneListById(accountId, listId);
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null if account and list does not exist', async () => {
+      const accountId = -1;
+      const listId = -1;
+      const result = await controller.findOneListById(accountId, listId);
+
+      expect(result).toBeNull();
+    });
+  });
 });
