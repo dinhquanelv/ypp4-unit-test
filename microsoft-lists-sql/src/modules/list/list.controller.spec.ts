@@ -57,4 +57,28 @@ describe('ListController', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('findFavoriteListsByAccountId', () => {
+    it('should return lists if accountId has favorite lists', async () => {
+      const accountId = 1;
+      const result = await controller.findFavoriteListsByAccountId(accountId);
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThan(0);
+      result.forEach((item) => {
+        expect(item).toHaveProperty('listId');
+        expect(item).toHaveProperty('icon');
+        expect(item).toHaveProperty('color');
+        expect(item).toHaveProperty('listName');
+        expect(item).toHaveProperty('workspaceName');
+      });
+    });
+
+    it('should return an empty lists if accountId does not have favorite lists', async () => {
+      const accountId = -1;
+      const result = await controller.findFavoriteListsByAccountId(accountId);
+
+      expect(result).toEqual([]);
+    });
+  });
 });

@@ -23,7 +23,8 @@ export class ListRepository {
   ): Promise<FindAllListDto[]> {
     const offset = (pageNumber - 1) * pageSize;
     const lists: FindAllListDto[] = await this.listRepository.query(
-      `SELECT 
+      `
+        SELECT 
             l.Id AS listId,
             l.Icon AS icon,
             l.Color AS color,
@@ -47,7 +48,24 @@ export class ListRepository {
   async findFavoriteListsByAccountId(
     accountId: number,
   ): Promise<FindAllListDto[]> {
-    const lists: FindAllListDto[] = await this.listRepository.query(``);
+    const lists: FindAllListDto[] = await this.listRepository.query(
+      `
+        SELECT
+            l.Id AS listId,
+            l.Icon AS icon,
+            l.Color AS color,
+            w.WorkspaceName AS workspaceName,
+            l.ListName AS listName
+        FROM
+            List l
+            JOIN FavoriteList fl ON fl.Id = l.Id
+            JOIN Account a ON a.Id = fl.ListId
+            JOIN Workspace w ON w.Id = l.WorkspaceId
+        WHERE
+            a.Id = ?
+    `,
+      [accountId],
+    );
     return lists;
   }
 
