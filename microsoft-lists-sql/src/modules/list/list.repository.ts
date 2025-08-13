@@ -16,9 +16,11 @@ export class ListRepository {
     private readonly listRepository: Repository<List>,
   ) {}
 
-  async searchAllListsByName(input: string): Promise<FindAllListDto[]> {
-    const pageNumber = 1;
-    const pageSize = 24;
+  async searchAllListsByName(
+    input: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<FindAllListDto[]> {
     const offset = (pageNumber - 1) * pageSize;
     const lists: FindAllListDto[] = await this.listRepository.query(
       `SELECT 

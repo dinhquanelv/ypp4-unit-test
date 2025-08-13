@@ -11,8 +11,16 @@ import { FindOneListDto } from '../../modules/list/dto/find-one-list.dto';
 export class ListController {
   constructor(private readonly listService: ListService) {}
 
-  async searchAllListsByName(input: string): Promise<FindAllListDto[]> {
-    return await this.listService.searchAllListsByName(input);
+  async searchAllListsByName(
+    input: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<FindAllListDto[]> {
+    return await this.listService.searchAllListsByName(
+      input,
+      pageNumber,
+      pageSize,
+    );
   }
 
   async findFavoriteListsByAccountId(

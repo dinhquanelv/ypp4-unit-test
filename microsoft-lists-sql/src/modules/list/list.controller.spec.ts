@@ -33,7 +33,7 @@ describe('ListController', () => {
   describe('searchAllListsByName', () => {
     it('should return lists if input matches the search term', async () => {
       const input = 'project';
-      const result = await controller.searchAllListsByName(input);
+      const result = await controller.searchAllListsByName(input, 1, 24);
 
       expect(result).toBeDefined();
       expect(result).not.toBeNull();
@@ -49,7 +49,7 @@ describe('ListController', () => {
 
     it('should return an empty array if input does not match the search term', async () => {
       const input = 'nonexistent';
-      const result = await controller.searchAllListsByName(input);
+      const result = await controller.searchAllListsByName(input, 1, 24);
 
       expect(result).toBeDefined();
       expect(result).not.toBeNull();
