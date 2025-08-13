@@ -72,7 +72,27 @@ export class ListRepository {
   async findRecentListsByAccountId(
     accountId: number,
   ): Promise<FindRecentListsDto[]> {
-    const lists: FindRecentListsDto[] = await this.listRepository.query(``);
+    const lists: FindRecentListsDto[] = await this.listRepository.query(
+      `
+        SELECT
+            l.Id AS listId,
+            l.Color AS color,
+            l.Icon AS icon,
+            l.ListName AS listName,
+            w.WorkspaceName AS workspaceName,
+            l.AccessedAt AS accessedAt
+        FROM
+            List l
+            JOIN AccountList al ON al.ListId = l.Id
+            JOIN Account a ON a.Id = al.AccountId
+            JOIN Workspace w ON w.Id = l.WorkspaceId
+        WHERE
+            a.Id = ?
+        ORDER BY
+            l.AccessedAt DESC
+        `,
+      [accountId],
+    );
     return lists;
   }
 

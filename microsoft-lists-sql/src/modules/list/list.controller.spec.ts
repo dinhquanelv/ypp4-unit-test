@@ -75,4 +75,28 @@ describe('ListController', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('findRecentListsByAccountId', () => {
+    it('should return recent lists if accountId has recent lists', async () => {
+      const accountId = 1;
+      const result = await controller.findRecentListsByAccountId(accountId);
+
+      expect(result.length).toBeGreaterThan(0);
+      result.forEach((item) => {
+        expect(item).toHaveProperty('listId');
+        expect(item).toHaveProperty('icon');
+        expect(item).toHaveProperty('color');
+        expect(item).toHaveProperty('listName');
+        expect(item).toHaveProperty('workspaceName');
+        expect(item).toHaveProperty('accessedAt');
+      });
+    });
+
+    it('should return an empty array if accountId does not have recent lists', async () => {
+      const accountId = -1;
+      const result = await controller.findRecentListsByAccountId(accountId);
+
+      expect(result).toEqual([]);
+    });
+  });
 });
