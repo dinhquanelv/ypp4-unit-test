@@ -11,29 +11,27 @@ import { FindOneListDto } from '../../modules/list/dto/find-one-list.dto';
 export class ListService {
   constructor(private readonly listRepository: ListRepository) {}
 
-  async searchAllListsByName(input: string): Promise<FindAllListDto[] | null> {
-    return await this.listRepository.searchAllByName(input);
+  async searchAllListsByName(input: string): Promise<FindAllListDto[]> {
+    return await this.listRepository.searchAllListsByName(input);
   }
 
   async findFavoriteListsByAccountId(
     accountId: number,
-  ): Promise<FindAllListDto[] | null> {
+  ): Promise<FindAllListDto[]> {
     return await this.listRepository.findFavoriteListsByAccountId(accountId);
   }
 
   async findRecentListsByAccountId(
     accountId: number,
-  ): Promise<FindRecentListsDto[] | null> {
+  ): Promise<FindRecentListsDto[]> {
     return await this.listRepository.findRecentListsByAccountId(accountId);
   }
 
-  async findAllListsByAccountId(
-    accountId: number,
-  ): Promise<FindAllListDto[] | null> {
+  async findAllListsByAccountId(accountId: number): Promise<FindAllListDto[]> {
     return await this.listRepository.findAllListsByAccountId(accountId);
   }
 
-  async findAllListType(): Promise<FindAllListTypeDto[] | null> {
+  async findAllListType(): Promise<FindAllListTypeDto[]> {
     return await this.listRepository.findAllListType();
   }
 
@@ -43,7 +41,7 @@ export class ListService {
     return await this.listRepository.findOneListType(listTypeId);
   }
 
-  async findOneList(id: number): Promise<FindOneListDto | null> {
-    return await this.listRepository.findOneList(id);
+  async findOneListById(id: number): Promise<FindOneListDto | null> {
+    return await this.listRepository.findOneListById(id);
   }
 }

@@ -11,29 +11,27 @@ import { FindOneListDto } from '../../modules/list/dto/find-one-list.dto';
 export class ListController {
   constructor(private readonly listService: ListService) {}
 
-  async searchAllListsByName(input: string): Promise<FindAllListDto[] | null> {
+  async searchAllListsByName(input: string): Promise<FindAllListDto[]> {
     return await this.listService.searchAllListsByName(input);
   }
 
   async findFavoriteListsByAccountId(
     accountId: number,
-  ): Promise<FindAllListDto[] | null> {
+  ): Promise<FindAllListDto[]> {
     return await this.listService.findFavoriteListsByAccountId(accountId);
   }
 
   async findRecentListsByAccountId(
     accountId: number,
-  ): Promise<FindRecentListsDto[] | null> {
+  ): Promise<FindRecentListsDto[]> {
     return await this.listService.findRecentListsByAccountId(accountId);
   }
 
-  async findAllListsByAccountId(
-    accountId: number,
-  ): Promise<FindAllListDto[] | null> {
+  async findAllListsByAccountId(accountId: number): Promise<FindAllListDto[]> {
     return await this.listService.findAllListsByAccountId(accountId);
   }
 
-  async findAllListType(): Promise<FindAllListTypeDto[] | null> {
+  async findAllListType(): Promise<FindAllListTypeDto[]> {
     return await this.listService.findAllListType();
   }
 
