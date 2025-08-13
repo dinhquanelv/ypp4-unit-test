@@ -97,7 +97,26 @@ export class ListRepository {
   }
 
   async findAllListsByAccountId(accountId: number): Promise<FindAllListDto[]> {
-    const lists: FindAllListDto[] = await this.listRepository.query(``);
+    const lists: FindAllListDto[] = await this.listRepository.query(
+      `
+        SELECT
+            l.Id AS listId,
+            l.Color AS color,
+            l.Icon AS icon,
+            l.ListName AS listName,
+            w.WorkspaceName AS workspaceName
+        FROM
+            List l
+            JOIN AccountList al ON al.ListId = l.Id
+            JOIN Account a ON a.Id = al.AccountId
+            JOIN Workspace w ON w.Id = l.WorkspaceId
+        WHERE
+            a.Id = ?
+        ORDER BY
+            l.CreatedAt DESC
+        `,
+      [accountId],
+    );
     return lists;
   }
 

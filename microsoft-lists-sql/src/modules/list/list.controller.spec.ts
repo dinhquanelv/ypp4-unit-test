@@ -99,4 +99,27 @@ describe('ListController', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('findAllListsByAccountId', () => {
+    it('should return lists if accountId have access to', async () => {
+      const accountId = 1;
+      const result = await controller.findAllListsByAccountId(accountId);
+
+      expect(result.length).toBeGreaterThan(0);
+      result.forEach((item) => {
+        expect(item).toHaveProperty('listId');
+        expect(item).toHaveProperty('icon');
+        expect(item).toHaveProperty('color');
+        expect(item).toHaveProperty('listName');
+        expect(item).toHaveProperty('workspaceName');
+      });
+    });
+
+    it('should return an empty array if accountId has no access to lists', async () => {
+      const accountId = -1;
+      const result = await controller.findAllListsByAccountId(accountId);
+
+      expect(result).toEqual([]);
+    });
+  });
 });
