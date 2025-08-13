@@ -138,8 +138,21 @@ export class ListRepository {
   async findOneListType(
     listTypeId: number,
   ): Promise<FindOneListTypeDto | null> {
-    const list: FindOneListTypeDto = await this.listRepository.query(``);
-    return list;
+    const list: FindOneListTypeDto[] = await this.listRepository.query(
+      `
+        SELECT
+            Id AS listTypeId,
+            Title AS title,
+            ListTypeDescription AS listTypeDescription,
+            HeaderImage AS headerImage
+        FROM
+            ListType
+        WHERE
+            Id = ?
+        `,
+      [listTypeId],
+    );
+    return list.length > 0 ? list[0] : null;
   }
 
   async findOneListById(id: number): Promise<FindOneListDto | null> {
