@@ -8,11 +8,13 @@ import { AccountRepository } from '../../modules/account/account.repository';
 export class AccountService {
   constructor(private readonly accountRepository: AccountRepository) {}
 
-  async findOne(id: number): Promise<FindOneAccountDto | null> {
-    return await this.accountRepository.findOne(id);
+  async findOneAccountById(id: number): Promise<FindOneAccountDto | null> {
+    return await this.accountRepository.findOneAccountById(id);
   }
 
-  async searchByEmailOrName(input: string): Promise<SearchAccountDto | null> {
-    return await this.accountRepository.searchByEmailOrName(input);
+  async searchAccountByEmailOrName(
+    input: string,
+  ): Promise<SearchAccountDto | null> {
+    return await this.accountRepository.searchAccountByEmailOrName(input);
   }
 }

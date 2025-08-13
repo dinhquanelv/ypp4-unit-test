@@ -8,11 +8,11 @@ import { SearchAccountDto } from '../../modules/account/dto/search-account.dto';
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
-  findOne(id: number): Promise<FindOneAccountDto | null> {
-    return this.accountService.findOne(id);
+  findOneAccountById(id: number): Promise<FindOneAccountDto | null> {
+    return this.accountService.findOneAccountById(id);
   }
 
-  searchByEmailOrName(name: string): Promise<SearchAccountDto | null> {
-    return this.accountService.searchByEmailOrName(name);
+  searchAccountByEmailOrName(name: string): Promise<SearchAccountDto | null> {
+    return this.accountService.searchAccountByEmailOrName(name);
   }
 }
