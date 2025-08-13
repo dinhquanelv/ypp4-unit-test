@@ -35,25 +35,20 @@ describe('ListController', () => {
       const input = 'project';
       const result = await controller.searchAllListsByName(input, 1, 24);
 
-      expect(result).toBeDefined();
-      expect(result).not.toBeNull();
-      expect(Array.isArray(result)).toBe(true);
-      if (result) {
-        expect(result[0]).toHaveProperty('listId');
-        expect(result[0]).toHaveProperty('icon');
-        expect(result[0]).toHaveProperty('color');
-        expect(result[0]).toHaveProperty('listName');
-        expect(result[0]).toHaveProperty('workspaceName');
-      }
+      expect(result.length).toBeGreaterThan(0);
+      result.forEach((item) => {
+        expect(item).toHaveProperty('listId');
+        expect(item).toHaveProperty('icon');
+        expect(item).toHaveProperty('color');
+        expect(item).toHaveProperty('listName');
+        expect(item).toHaveProperty('workspaceName');
+      });
     });
 
     it('should return an empty array if input does not match the search term', async () => {
       const input = 'nonexistent';
       const result = await controller.searchAllListsByName(input, 1, 24);
 
-      expect(result).toBeDefined();
-      expect(result).not.toBeNull();
-      expect(Array.isArray(result)).toBe(true);
       expect(result).toEqual([]);
     });
   });
@@ -63,7 +58,6 @@ describe('ListController', () => {
       const accountId = 1;
       const result = await controller.findFavoriteListsByAccountId(accountId);
 
-      expect(Array.isArray(result)).toBe(true);
       expect(result.length).toBeGreaterThan(0);
       result.forEach((item) => {
         expect(item).toHaveProperty('listId');
