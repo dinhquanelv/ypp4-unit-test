@@ -1,2 +1,3 @@
 onlyBuiltDependencies:
   - msnodesqlv8
+  - sqlite3
