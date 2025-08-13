@@ -9,7 +9,7 @@ export class AccountController {
     return this.accountService.findOne(id);
   }
 
-  findAllByEmailOrName(name: string) {
-    return this.accountService.findAllByEmailOrName(name);
+  searchByEmailOrName(name: string) {
+    return this.accountService.searchByEmailOrName(name);
   }
 }
