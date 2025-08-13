@@ -57,4 +57,25 @@ describe('AccountController', () => {
       expect(result).toBeNull();
     });
   });
+
+  describe('searchByEmailOrName', () => {
+    it('should return account data when a valid email or name is provided', async () => {
+      const searchTerm = 'john.doe@example.com';
+      const result = await controller.searchByEmailOrName(searchTerm);
+
+      expect(result).toBeDefined();
+      expect(result).not.toBeNull();
+      expect(result).toHaveProperty('firstName');
+      expect(result).toHaveProperty('lastName');
+      expect(result).toHaveProperty('email');
+      expect(result).toHaveProperty('avatar');
+    });
+
+    it('should return null when no account matches the search term', async () => {
+      const searchTerm = 'non.existent@example.com';
+      const result = await controller.searchByEmailOrName(searchTerm);
+
+      expect(result).toBeNull();
+    });
+  });
 });

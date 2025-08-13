@@ -1,14 +1,16 @@
 import { DataSource } from 'typeorm';
-import { seedAccounts } from './account.seed';
+import { insertData } from './insert-data.seed';
+import { createTables } from './create-tables.seed';
 
 export async function runAllSeeds(dataSource: DataSource): Promise<void> {
-  console.log('Starting database seeding...');
+  console.log('>>> Starting database seeding...');
 
   try {
-    await seedAccounts(dataSource);
-    console.log('All seeds completed successfully!');
+    await createTables(dataSource);
+    await insertData(dataSource);
+    console.log('>>> All seeds completed successfully!');
   } catch (error) {
-    console.error('Error during seeding:', error);
+    console.error('>>> Error during seeding: ', error);
     throw error;
   }
 }
@@ -24,14 +26,14 @@ export async function seedDatabase(): Promise<void> {
 
   try {
     await dataSource.initialize();
-    console.log('Database connected');
+    console.log('>>> Database connected');
 
     await runAllSeeds(dataSource);
 
     await dataSource.destroy();
-    console.log('Database connection closed');
+    console.log('>>> Database connection closed');
   } catch (error) {
-    console.error('Seeding failed:', error);
+    console.error('>>> Seeding failed: ', error);
     process.exit(1);
   }
 }
