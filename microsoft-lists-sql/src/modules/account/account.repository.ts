@@ -17,15 +17,15 @@ export class AccountRepository {
     const query: FindOneAccountDto[] = await this.accountRepository.query(
       `
         SELECT 
-            FirstName as firstName, 
-            LastName as lastName, 
-            Email as email, 
-            Avatar as avatar, 
-            Company as company
+          FirstName as firstName, 
+          LastName as lastName, 
+          Email as email, 
+          Avatar as avatar, 
+          Company as company
         FROM 
-            Account 
+          Account 
         WHERE 
-            Id = ?`,
+          Id = ?`,
       [id],
     );
 
@@ -38,16 +38,16 @@ export class AccountRepository {
     const query: SearchAccountDto[] = await this.accountRepository.query(
       `
         SELECT 
-            FirstName as firstName, 
-            LastName as lastName, 
-            Email as email, 
-            Avatar as avatar
+          FirstName as firstName, 
+          LastName as lastName, 
+          Email as email, 
+          Avatar as avatar
         FROM 
-            Account
+          Account
         WHERE 
-            Email LIKE ? 
-            OR FirstName LIKE ? 
-            OR LastName LIKE ?`,
+          Email LIKE ? 
+          OR FirstName LIKE ? 
+          OR LastName LIKE ?`,
       [`%${input}%`, `%${input}%`, `%${input}%`],
     );
 

@@ -25,18 +25,18 @@ export class ListRepository {
     const lists: FindAllListDto[] = await this.listRepository.query(
       `
         SELECT 
-            l.Id AS listId,
-            l.Icon AS icon,
-            l.Color AS color,
-            l.ListName AS listName,
-            w.WorkspaceName AS workspaceName
+          l.Id AS listId,
+          l.Icon AS icon,
+          l.Color AS color,
+          l.ListName AS listName,
+          w.WorkspaceName AS workspaceName
         FROM
-            List l
-            JOIN Workspace w ON w.Id = l.WorkspaceId
+          List l
+          JOIN Workspace w ON w.Id = l.WorkspaceId
         WHERE
-            l.ListName LIKE '%' || ? || '%'
+          l.ListName LIKE '%' || ? || '%'
         ORDER BY
-            l.ListName
+          l.ListName
         LIMIT ? OFFSET ?;
     `,
       [input, pageSize, offset],
@@ -51,18 +51,18 @@ export class ListRepository {
     const lists: FindAllListDto[] = await this.listRepository.query(
       `
         SELECT
-            l.Id AS listId,
-            l.Icon AS icon,
-            l.Color AS color,
-            w.WorkspaceName AS workspaceName,
-            l.ListName AS listName
+          l.Id AS listId,
+          l.Icon AS icon,
+          l.Color AS color,
+          w.WorkspaceName AS workspaceName,
+          l.ListName AS listName
         FROM
-            List l
-            JOIN FavoriteList fl ON fl.Id = l.Id
-            JOIN Account a ON a.Id = fl.ListId
-            JOIN Workspace w ON w.Id = l.WorkspaceId
+          List l
+          JOIN FavoriteList fl ON fl.Id = l.Id
+          JOIN Account a ON a.Id = fl.ListId
+          JOIN Workspace w ON w.Id = l.WorkspaceId
         WHERE
-            a.Id = ?
+          a.Id = ?
     `,
       [accountId],
     );
@@ -75,21 +75,21 @@ export class ListRepository {
     const lists: FindRecentListsDto[] = await this.listRepository.query(
       `
         SELECT
-            l.Id AS listId,
-            l.Color AS color,
-            l.Icon AS icon,
-            l.ListName AS listName,
-            w.WorkspaceName AS workspaceName,
-            l.AccessedAt AS accessedAt
+          l.Id AS listId,
+          l.Color AS color,
+          l.Icon AS icon,
+          l.ListName AS listName,
+          w.WorkspaceName AS workspaceName,
+          l.AccessedAt AS accessedAt
         FROM
-            List l
-            JOIN AccountList al ON al.ListId = l.Id
-            JOIN Account a ON a.Id = al.AccountId
-            JOIN Workspace w ON w.Id = l.WorkspaceId
+          List l
+          JOIN AccountList al ON al.ListId = l.Id
+          JOIN Account a ON a.Id = al.AccountId
+          JOIN Workspace w ON w.Id = l.WorkspaceId
         WHERE
-            a.Id = ?
+          a.Id = ?
         ORDER BY
-            l.AccessedAt DESC
+          l.AccessedAt DESC
         `,
       [accountId],
     );
@@ -100,20 +100,20 @@ export class ListRepository {
     const lists: FindAllListDto[] = await this.listRepository.query(
       `
         SELECT
-            l.Id AS listId,
-            l.Color AS color,
-            l.Icon AS icon,
-            l.ListName AS listName,
-            w.WorkspaceName AS workspaceName
+          l.Id AS listId,
+          l.Color AS color,
+          l.Icon AS icon,
+          l.ListName AS listName,
+          w.WorkspaceName AS workspaceName
         FROM
-            List l
-            JOIN AccountList al ON al.ListId = l.Id
-            JOIN Account a ON a.Id = al.AccountId
-            JOIN Workspace w ON w.Id = l.WorkspaceId
+          List l
+          JOIN AccountList al ON al.ListId = l.Id
+          JOIN Account a ON a.Id = al.AccountId
+          JOIN Workspace w ON w.Id = l.WorkspaceId
         WHERE
-            a.Id = ?
+          a.Id = ?
         ORDER BY
-            l.CreatedAt DESC
+          l.CreatedAt DESC
         `,
       [accountId],
     );
@@ -124,12 +124,12 @@ export class ListRepository {
     const lists: FindAllListTypeDto[] = await this.listRepository.query(
       `
         SELECT
-            Id AS id,
-            Icon AS icon,
-            Title AS title,
-            ListTypeDescription AS listTypeDescription
+          Id AS id,
+          Icon AS icon,
+          Title AS title,
+          ListTypeDescription AS listTypeDescription
         FROM
-            ListType
+          ListType
         `,
     );
     return lists;
@@ -141,14 +141,14 @@ export class ListRepository {
     const list: FindOneListTypeDto[] = await this.listRepository.query(
       `
         SELECT
-            Id AS listTypeId,
-            Title AS title,
-            ListTypeDescription AS listTypeDescription,
-            HeaderImage AS headerImage
+          Id AS listTypeId,
+          Title AS title,
+          ListTypeDescription AS listTypeDescription,
+          HeaderImage AS headerImage
         FROM
-            ListType
+          ListType
         WHERE
-            Id = ?
+          Id = ?
         `,
       [listTypeId],
     );
@@ -162,23 +162,23 @@ export class ListRepository {
     const list: FindOneListDto[] = await this.listRepository.query(
       `
         SELECT
-            l.Id AS listId,
-            l.Icon AS icon,
-            l.Color AS color,
-            w.WorkspaceName AS workspaceName,
-            l.ListName AS listName,
-            CASE
-                WHEN fl.Id IS NOT NULL THEN 1
-                ELSE 0
-            END AS isFavoriteList
+          l.Id AS listId,
+          l.Icon AS icon,
+          l.Color AS color,
+          w.WorkspaceName AS workspaceName,
+          l.ListName AS listName,
+          CASE
+            WHEN fl.Id IS NOT NULL THEN 1
+            ELSE 0
+          END AS isFavoriteList
         FROM
-            List l
-            JOIN Account a ON a.Id = ?
-            JOIN Workspace w ON w.Id = l.WorkspaceId
-            LEFT JOIN FavoriteList fl ON fl.ListId = l.Id
-            AND fl.FavoredBy = ?
+          List l
+          JOIN Account a ON a.Id = ?
+          JOIN Workspace w ON w.Id = l.WorkspaceId
+          LEFT JOIN FavoriteList fl ON fl.ListId = l.Id
+          AND fl.FavoredBy = ?
         WHERE
-            l.Id = ?
+          l.Id = ?
         `,
       [accountId, accountId, listId],
     );
