@@ -11,7 +11,6 @@ import { ListModule } from './modules/list/list.module';
       type: 'sqlite',
       database: 'database.sqlite',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
     }),
     AccountModule,
     ListModule,

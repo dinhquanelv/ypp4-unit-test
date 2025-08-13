@@ -17,7 +17,6 @@ describe('AccountController', () => {
           type: 'sqlite',
           database: 'database.sqlite',
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: false,
         }),
         TypeOrmModule.forFeature([Account]),
       ],
