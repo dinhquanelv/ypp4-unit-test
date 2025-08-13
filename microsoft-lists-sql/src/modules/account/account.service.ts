@@ -9,10 +9,10 @@ export class AccountService {
   constructor(private readonly accountRepository: AccountRepository) {}
 
   async findOne(id: number): Promise<FindOneAccountDto | null> {
-    return this.accountRepository.findOne(id);
+    return await this.accountRepository.findOne(id);
   }
 
   async searchByEmailOrName(input: string): Promise<SearchAccountDto | null> {
-    return this.accountRepository.searchByEmailOrName(input);
+    return await this.accountRepository.searchByEmailOrName(input);
   }
 }
