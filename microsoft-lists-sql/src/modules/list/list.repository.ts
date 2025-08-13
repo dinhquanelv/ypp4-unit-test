@@ -121,7 +121,17 @@ export class ListRepository {
   }
 
   async findAllListType(): Promise<FindAllListTypeDto[]> {
-    const lists: FindAllListTypeDto[] = await this.listRepository.query(``);
+    const lists: FindAllListTypeDto[] = await this.listRepository.query(
+      `
+        SELECT
+            Id AS id,
+            Icon AS icon,
+            Title AS title,
+            ListTypeDescription AS listTypeDescription
+        FROM
+            ListType
+        `,
+    );
     return lists;
   }
 

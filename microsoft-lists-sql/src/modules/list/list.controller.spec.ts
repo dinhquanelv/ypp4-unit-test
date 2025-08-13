@@ -122,4 +122,18 @@ describe('ListController', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('findAllListType', () => {
+    it('should return all list type', async () => {
+      const result = await controller.findAllListType();
+
+      expect(result.length).toBeGreaterThan(0);
+      result.forEach((item) => {
+        expect(item).toHaveProperty('id');
+        expect(item).toHaveProperty('icon');
+        expect(item).toHaveProperty('title');
+        expect(item).toHaveProperty('listTypeDescription');
+      });
+    });
+  });
 });
