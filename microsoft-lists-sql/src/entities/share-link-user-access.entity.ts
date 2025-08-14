@@ -6,16 +6,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('TemplateSampleRow')
-export class TemplateSampleRow {
+@Entity('ShareLinkUserAccess')
+export class ShareLinkUserAccess {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'ListTemplateId', type: 'integer' })
-  listTemplateId: number;
+  @Column({ name: 'ShareLinkId', type: 'integer' })
+  shareLinkId: number;
 
-  @Column({ name: 'DisplayOrder', type: 'integer' })
-  displayOrder: number;
+  @Column({ name: 'AccountId', type: 'integer' })
+  accountId: number;
 
   @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;

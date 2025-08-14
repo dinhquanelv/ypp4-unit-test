@@ -2,13 +2,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Account } from './account.entity';
-import { Workspace } from './workspace.entity';
 
 @Entity('AccountWorkspace')
 export class AccountWorkspace {
@@ -21,25 +17,9 @@ export class AccountWorkspace {
   @Column({ name: 'WorkspaceId', type: 'integer' })
   workspaceId: number;
 
-  @ManyToOne(() => Account, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'AccountId' })
-  account: Account;
-
-  @ManyToOne(() => Workspace, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'WorkspaceId' })
-  workspace: Workspace;
-
-  @CreateDateColumn({
-    name: 'CreatedAt',
-    type: 'text',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'UpdatedAt',
-    type: 'text',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'UpdatedAt', type: 'text' })
   updatedAt: Date;
 }

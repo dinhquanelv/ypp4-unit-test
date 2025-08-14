@@ -6,19 +6,22 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('ViewSetting')
-export class ViewSetting {
+@Entity('ShareLinkOption')
+export class ShareLinkOption {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'SettingKey', type: 'text' })
-  settingKey: string;
-
-  @Column({ name: 'DisplayName', type: 'text' })
-  displayName: string;
+  @Column({ name: 'OptionName', type: 'text' })
+  optionName: string;
 
   @Column({ name: 'ValueType', type: 'text' })
   valueType: string;
+
+  @Column({ name: 'OptionValue', type: 'text' })
+  optionValue?: string;
+
+  @Column({ name: 'ScopeId', type: 'integer' })
+  scopeId: number;
 
   @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;

@@ -6,16 +6,19 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('TemplateSampleRow')
-export class TemplateSampleRow {
+@Entity('ListCellValue')
+export class ListCellValue {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'ListTemplateId', type: 'integer' })
-  listTemplateId: number;
+  @Column({ name: 'ListRowId', type: 'integer' })
+  listRowId: number;
 
-  @Column({ name: 'DisplayOrder', type: 'integer' })
-  displayOrder: number;
+  @Column({ name: 'ListDynamicColumnId', type: 'integer' })
+  listDynamicColumnId: number;
+
+  @Column({ name: 'CellValue', type: 'text' })
+  cellValue?: string;
 
   @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;

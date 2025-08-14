@@ -4,46 +4,25 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-
-import { TemplateColumn } from './template-column.entity';
-import { TemplateSampleRow } from './template-sample-row.entity';
 
 @Entity('TemplateSampleCellValue')
 export class TemplateSampleCellValue {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'TemplateColumnId', type: 'integer', nullable: false })
+  @Column({ name: 'TemplateColumnId', type: 'integer' })
   templateColumnId: number;
 
-  @Column({ name: 'TemplateSampleRowId', type: 'integer', nullable: false })
+  @Column({ name: 'TemplateSampleRowId', type: 'integer' })
   templateSampleRowId: number;
 
-  @Column({ name: 'CellValue', type: 'text', length: 255, nullable: true })
+  @Column({ name: 'CellValue', type: 'text' })
   cellValue?: string;
 
-  @CreateDateColumn({
-    name: 'CreatedAt',
-    type: 'text',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'UpdatedAt',
-    type: 'text',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'UpdatedAt', type: 'text' })
   updatedAt: Date;
-
-  @ManyToOne(() => TemplateColumn)
-  @JoinColumn({ name: 'TemplateColumnId' })
-  templateColumn: TemplateColumn;
-
-  @ManyToOne(() => TemplateSampleRow)
-  @JoinColumn({ name: 'TemplateSampleRowId' })
-  templateSampleRow: TemplateSampleRow;
 }

@@ -11,36 +11,21 @@ export class ListType {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'Title', type: 'text', length: 255, nullable: false })
+  @Column({ name: 'Title', type: 'text' })
   title: string;
 
-  @Column({ name: 'Icon', type: 'text', length: 100, nullable: true })
+  @Column({ name: 'Icon', type: 'text' })
   icon?: string;
 
-  @Column({ name: 'HeaderImage', type: 'text', length: 255, nullable: true })
+  @Column({ name: 'HeaderImage', type: 'text' })
   headerImage?: string;
 
-  @Column({
-    name: 'ListTypeDescription',
-    type: 'text',
-    length: 1000,
-    nullable: true,
-  })
+  @Column({ name: 'ListTypeDescription', type: 'text' })
   listTypeDescription?: string;
 
-  @CreateDateColumn({
-    name: 'CreatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'UpdatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'UpdatedAt', type: 'text' })
   updatedAt: Date;
 }

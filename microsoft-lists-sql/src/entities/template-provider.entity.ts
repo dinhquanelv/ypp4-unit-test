@@ -11,22 +11,12 @@ export class TemplateProvider {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'ProviderName', type: 'text', length: 255, nullable: false })
+  @Column({ name: 'ProviderName', type: 'text' })
   providerName: string;
 
-  @CreateDateColumn({
-    name: 'CreatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'UpdatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'UpdatedAt', type: 'text' })
   updatedAt: Date;
 }

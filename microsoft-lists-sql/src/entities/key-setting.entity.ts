@@ -4,38 +4,25 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from 'typeorm';
-import { DataTypeSettingKey } from './data-type-setting-key.entity';
 
 @Entity('KeySetting')
 export class KeySetting {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'KeyName', type: 'text', length: 100, nullable: false })
+  @Column({ name: 'KeyName', type: 'text' })
   keyName: string;
 
-  @Column({ name: 'ValueType', type: 'text', length: 100, nullable: false })
+  @Column({ name: 'ValueType', type: 'text' })
   valueType: string;
 
-  @Column({ name: 'DisplayName', type: 'text', length: 100, nullable: false })
+  @Column({ name: 'DisplayName', type: 'text' })
   displayName: string;
 
-  @CreateDateColumn({
-    name: 'CreatedAt',
-    type: 'text',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'UpdatedAt',
-    type: 'text',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'UpdatedAt', type: 'text' })
   updatedAt: Date;
-
-  @OneToMany(() => DataTypeSettingKey, (dtsk) => dtsk.keySetting)
-  dataTypeSettingKeys: DataTypeSettingKey[];
 }
