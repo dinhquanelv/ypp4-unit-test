@@ -7,7 +7,7 @@ import {
   ManyToMany,
 } from 'typeorm';
 
-import { Account } from '../entities/account.entity';
+import { Account } from './account.entity';
 
 @Entity('Workspace')
 export class Workspace {

@@ -8,7 +8,7 @@ import {
   JoinTable,
 } from 'typeorm';
 
-import { Workspace } from '../entities/workspace.entity';
+import { Workspace } from './workspace.entity';
 
 @Entity('Account')
 export class Account {
