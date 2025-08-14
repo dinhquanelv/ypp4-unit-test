@@ -3,11 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { List } from '../../entities/list.entity';
-import { FindAllListDto } from '../../modules/list/dto/find-all-list.dto';
-import { FindRecentListsDto } from '../../modules/list/dto/find-recent-list.dto';
-import { FindAllListTypeDto } from '../../modules/list/dto/find-all-list-type.dto';
-import { FindOneListTypeDto } from '../../modules/list/dto/find-one-list-type.dto';
-import { FindOneListDto } from '../../modules/list/dto/find-one-list.dto';
+import { FindAllListDto } from './dto/find-all-list.dto';
+import { FindRecentListsDto } from './dto/find-recent-list.dto';
+import { FindOneListDto } from './dto/find-one-list.dto';
 
 @Injectable()
 export class ListRepository {
@@ -118,41 +116,6 @@ export class ListRepository {
       [accountId],
     );
     return lists;
-  }
-
-  async findAllListType(): Promise<FindAllListTypeDto[]> {
-    const lists: FindAllListTypeDto[] = await this.listRepository.query(
-      `
-        SELECT
-          Id AS id,
-          Icon AS icon,
-          Title AS title,
-          ListTypeDescription AS listTypeDescription
-        FROM
-          ListType
-        `,
-    );
-    return lists;
-  }
-
-  async findOneListType(
-    listTypeId: number,
-  ): Promise<FindOneListTypeDto | null> {
-    const list: FindOneListTypeDto[] = await this.listRepository.query(
-      `
-        SELECT
-          Id AS listTypeId,
-          Title AS title,
-          ListTypeDescription AS listTypeDescription,
-          HeaderImage AS headerImage
-        FROM
-          ListType
-        WHERE
-          Id = ?
-        `,
-      [listTypeId],
-    );
-    return list.length > 0 ? list[0] : null;
   }
 
   async findOneListById(

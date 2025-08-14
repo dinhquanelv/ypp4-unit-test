@@ -123,40 +123,6 @@ describe('ListController', () => {
     });
   });
 
-  describe('findAllListType', () => {
-    it('should return all list type', async () => {
-      const result = await controller.findAllListType();
-
-      expect(result.length).toBeGreaterThan(0);
-      result.forEach((item) => {
-        expect(item).toHaveProperty('id');
-        expect(item).toHaveProperty('icon');
-        expect(item).toHaveProperty('title');
-        expect(item).toHaveProperty('listTypeDescription');
-      });
-    });
-  });
-
-  describe('findOneListType', () => {
-    it('should return a list type if it exists', async () => {
-      const listTypeId = 1;
-      const result = await controller.findOneListType(listTypeId);
-
-      expect(result).toBeDefined();
-      expect(result).toHaveProperty('listTypeId');
-      expect(result).toHaveProperty('title');
-      expect(result).toHaveProperty('listTypeDescription');
-      expect(result).toHaveProperty('headerImage');
-    });
-
-    it('should return null if the list type does not exist', async () => {
-      const listTypeId = -1;
-      const result = await controller.findOneListType(listTypeId);
-
-      expect(result).toBeNull();
-    });
-  });
-
   describe('findOneListById', () => {
     it('should return a list if it exists', async () => {
       const accountId = 1;
