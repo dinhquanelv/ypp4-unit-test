@@ -85,9 +85,59 @@ export class TemplateRepository {
   async findAllTemplateSampleCellValuesByListTemplateId(
     listTemplateId: number,
   ): Promise<FindAllTemplateSampleCellValuesByListTemplateIdDto[]> {
-    const templateSampleCellValues: FindAllTemplateSampleCellValuesByListTemplateIdDto[] =
-      await this.listTemplateRepository.query(``);
-    return templateSampleCellValues;
+    const columnsResult: { columns: string }[] =
+      await this.listTemplateRepository.query(
+        `
+        SELECT 
+          GROUP_CONCAT(DISTINCT Id) AS columns
+        FROM 
+          TemplateColumn
+        WHERE 
+          ListTemplateId = ?
+      `,
+        [listTemplateId],
+      );
+
+    const colList: string[] = columnsResult[0]?.columns?.split(',') || [];
+
+    if (colList.length === 0) {
+      return [];
+    }
+
+    const caseColumns: string = colList
+      .map(
+        (columnId: string) =>
+          `MAX
+            (CASE 
+              WHEN 
+                tc.Id = ${columnId} 
+              THEN 
+                tscv.CellValue 
+            END) AS column_${columnId}`,
+      )
+      .join(', ');
+
+    const sql = `
+      SELECT 
+        tsr.Id AS templateSampleRowId, ${caseColumns}
+      FROM 
+        TemplateSampleRow tsr
+        CROSS JOIN TemplateColumn tc
+        LEFT JOIN TemplateSampleCellValue tscv 
+        ON tscv.TemplateSampleRowId = tsr.Id 
+        AND tscv.TemplateColumnId = tc.Id
+      WHERE 
+        tsr.ListTemplateId = ? AND tc.ListTemplateId = ?
+      GROUP BY 
+        tsr.Id
+      ORDER BY 
+        tsr.Id
+  `;
+
+    return await this.listTemplateRepository.query(sql, [
+      listTemplateId,
+      listTemplateId,
+    ]);
   }
 
   async findAllViewsByListTemplateId(

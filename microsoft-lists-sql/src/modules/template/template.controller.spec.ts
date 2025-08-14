@@ -101,6 +101,31 @@ describe('TemplateController', () => {
     });
   });
 
+  describe('findAllTemplateSampleCellValuesByListTemplateId', () => {
+    it('should return all sample cell values if template exists', async () => {
+      const listTemplateId = 1;
+      const result =
+        await controller.findAllTemplateSampleCellValuesByListTemplateId(
+          listTemplateId,
+        );
+
+      expect(result).toBeDefined();
+      result.forEach((item) => {
+        expect(item).toHaveProperty('templateSampleRowId');
+      });
+    });
+
+    it('should return an empty array if template not found', async () => {
+      const listTemplateId = -1;
+      const result =
+        await controller.findAllTemplateSampleCellValuesByListTemplateId(
+          listTemplateId,
+        );
+
+      expect(result).toEqual([]);
+    });
+  });
+
   describe('findAllViewsByListTemplateId', () => {
     it('should return all views if template exists', async () => {
       const listTemplateId = 1;
