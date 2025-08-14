@@ -8,9 +8,10 @@ import { ListTypeRepository } from './list-type.repository';
 
 describe('ListTypeController', () => {
   let controller: ListTypeController;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'sqlite',
@@ -24,6 +25,10 @@ describe('ListTypeController', () => {
     }).compile();
 
     controller = module.get<ListTypeController>(ListTypeController);
+  });
+
+  afterAll(async () => {
+    await module.close();
   });
 
   it('should be defined', () => {
