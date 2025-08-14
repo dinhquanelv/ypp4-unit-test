@@ -4,6 +4,10 @@ import { Repository } from 'typeorm';
 
 import { ListTemplate } from '../../entities/list-template.entity';
 import { FindAllByProviderIdDto } from './dto/find-all-by-provider-id.dto';
+import { FindOneTemplateByIdDto } from './dto/find-one-template-by-id.dto';
+import { FindAllColumnsByListTemplateIdDto } from './dto/find-all-columns-by-list-template-id.dto';
+import { FindAllTemplateSampleCellValuesByListTemplateIdDto } from './dto/find-all-template-sample-cell-values-by-list-template-id.dto';
+import { FindAllViewsByListTemplateIdDto } from './dto/find-all-views-by-list-template-id.dto';
 
 @Injectable()
 export class TemplateRepository {
@@ -31,5 +35,51 @@ export class TemplateRepository {
       );
 
     return templates;
+  }
+
+  async findOneTemplateById(
+    templateId: number,
+  ): Promise<FindOneTemplateByIdDto | null> {
+    const template: FindOneTemplateByIdDto[] =
+      await this.listTemplateRepository.query(
+        `
+        SELECT
+          Id AS templateId,
+          Icon AS icon,
+          Title AS title,
+          Summary AS summary,
+          Feature AS feature
+        FROM
+          ListTemplate
+        WHERE
+          Id = ?
+        `,
+        [templateId],
+      );
+    return template.length > 0 ? template[0] : null;
+  }
+
+  async findAllColumnsByListTemplateId(
+    listTemplateId: number,
+  ): Promise<FindAllColumnsByListTemplateIdDto[]> {
+    const templateColumns: FindAllColumnsByListTemplateIdDto[] =
+      await this.listTemplateRepository.query(``);
+    return templateColumns;
+  }
+
+  async findAllTemplateSampleCellValuesByListTemplateId(
+    listTemplateId: number,
+  ): Promise<FindAllTemplateSampleCellValuesByListTemplateIdDto[]> {
+    const templateSampleCellValues: FindAllTemplateSampleCellValuesByListTemplateIdDto[] =
+      await this.listTemplateRepository.query(``);
+    return templateSampleCellValues;
+  }
+
+  async findAllViewsByListTemplateId(
+    listTemplateId: number,
+  ): Promise<FindAllViewsByListTemplateIdDto[]> {
+    const templateViews: FindAllViewsByListTemplateIdDto[] =
+      await this.listTemplateRepository.query(``);
+    return templateViews;
   }
 }

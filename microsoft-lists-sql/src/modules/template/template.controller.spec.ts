@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { TemplateController } from './template.controller';
 import { TemplateService } from './template.service';
-import { TemplateRepository } from '../../modules/template/template.repository';
+import { TemplateRepository } from './template.repository';
 import { ListTemplate } from '../../entities/list-template.entity';
 
 describe('TemplateController', () => {
@@ -54,6 +54,27 @@ describe('TemplateController', () => {
       const result = await controller.findAllByProviderId(providerId);
 
       expect(result.length).toBe(0);
+    });
+  });
+
+  describe('findOneTemplateById', () => {
+    it('should return a template if template exists', async () => {
+      const templateId = 1;
+      const result = await controller.findOneTemplateById(templateId);
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('templateId');
+      expect(result).toHaveProperty('icon');
+      expect(result).toHaveProperty('title');
+      expect(result).toHaveProperty('summary');
+      expect(result).toHaveProperty('feature');
+    });
+
+    it('should return null if template not found', async () => {
+      const templateId = -1;
+      const result = await controller.findOneTemplateById(templateId);
+
+      expect(result).toBeNull();
     });
   });
 });
