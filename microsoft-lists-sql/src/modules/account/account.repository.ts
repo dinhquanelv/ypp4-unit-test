@@ -13,17 +13,18 @@ export class AccountRepository {
     private readonly accountRepository: Repository<Account>,
   ) {}
 
-  async findOne(id: number): Promise<FindOneAccountDto | null> {
+  async findOneAccountById(id: number): Promise<FindOneAccountDto | null> {
     const query: FindOneAccountDto[] = await this.accountRepository.query(
-      `SELECT 
+      `
+        SELECT 
           FirstName as firstName, 
           LastName as lastName, 
           Email as email, 
           Avatar as avatar, 
           Company as company
-       FROM 
+        FROM 
           Account 
-       WHERE 
+        WHERE 
           Id = ?`,
       [id],
     );
@@ -31,16 +32,19 @@ export class AccountRepository {
     return query.length > 0 ? query[0] : null;
   }
 
-  async searchByEmailOrName(input: string): Promise<SearchAccountDto | null> {
+  async searchAccountByEmailOrName(
+    input: string,
+  ): Promise<SearchAccountDto | null> {
     const query: SearchAccountDto[] = await this.accountRepository.query(
-      `SELECT 
+      `
+        SELECT 
           FirstName as firstName, 
           LastName as lastName, 
           Email as email, 
           Avatar as avatar
-       FROM 
+        FROM 
           Account
-       WHERE 
+        WHERE 
           Email LIKE ? 
           OR FirstName LIKE ? 
           OR LastName LIKE ?`,
