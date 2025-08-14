@@ -100,4 +100,27 @@ describe('TemplateController', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('findAllViewsByListTemplateId', () => {
+    it('should return all views if template exists', async () => {
+      const listTemplateId = 1;
+      const result =
+        await controller.findAllViewsByListTemplateId(listTemplateId);
+
+      expect(result).toBeDefined();
+      result.forEach((item) => {
+        expect(item).toHaveProperty('templateViewId');
+        expect(item).toHaveProperty('icon');
+        expect(item).toHaveProperty('viewName');
+      });
+    });
+
+    it('should return an empty array if template not found', async () => {
+      const listTemplateId = -1;
+      const result =
+        await controller.findAllViewsByListTemplateId(listTemplateId);
+
+      expect(result).toEqual([]);
+    });
+  });
 });

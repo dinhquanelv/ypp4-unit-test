@@ -94,7 +94,22 @@ export class TemplateRepository {
     listTemplateId: number,
   ): Promise<FindAllViewsByListTemplateIdDto[]> {
     const templateViews: FindAllViewsByListTemplateIdDto[] =
-      await this.listTemplateRepository.query(``);
+      await this.listTemplateRepository.query(
+        `
+        SELECT
+          tv.Id AS templateViewId,
+          vt.Icon AS icon,
+          tv.ViewName AS viewName
+        FROM
+          TemplateView tv
+          JOIN ViewType vt ON vt.Id = tv.ViewTypeId
+        WHERE
+          tv.ListTemplateId = ?
+        ORDER BY
+          tv.DisplayOrder
+        `,
+        [listTemplateId],
+      );
     return templateViews;
   }
 }
