@@ -77,4 +77,27 @@ describe('TemplateController', () => {
       expect(result).toBeNull();
     });
   });
+
+  describe('findAllColumnsByListTemplateId', () => {
+    it('should return all columns if template exists', async () => {
+      const listTemplateId = 1;
+      const result =
+        await controller.findAllColumnsByListTemplateId(listTemplateId);
+
+      expect(result).toBeDefined();
+      result.forEach((item) => {
+        expect(item).toHaveProperty('templateColumnId');
+        expect(item).toHaveProperty('icon');
+        expect(item).toHaveProperty('columnName');
+      });
+    });
+
+    it('should return an empty array if template not found', async () => {
+      const listTemplateId = -1;
+      const result =
+        await controller.findAllColumnsByListTemplateId(listTemplateId);
+
+      expect(result).toEqual([]);
+    });
+  });
 });

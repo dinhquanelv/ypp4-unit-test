@@ -63,7 +63,22 @@ export class TemplateRepository {
     listTemplateId: number,
   ): Promise<FindAllColumnsByListTemplateIdDto[]> {
     const templateColumns: FindAllColumnsByListTemplateIdDto[] =
-      await this.listTemplateRepository.query(``);
+      await this.listTemplateRepository.query(
+        `
+        SELECT
+          tc.Id AS templateColumnId,
+          sdt.Icon AS icon,
+          tc.ColumnName AS columnName
+        FROM
+          TemplateColumn tc
+          JOIN SystemDataType sdt ON sdt.Id = tc.SystemDataTypeId
+        WHERE
+          tc.ListTemplateId = ?
+        ORDER BY
+          tc.DisplayOrder
+        `,
+        [listTemplateId],
+      );
     return templateColumns;
   }
 
