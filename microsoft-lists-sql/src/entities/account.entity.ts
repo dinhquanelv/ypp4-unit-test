@@ -4,89 +4,40 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
-  JoinTable,
 } from 'typeorm';
-
-import { Workspace } from './workspace.entity';
 
 @Entity('Account')
 export class Account {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'FirstName', type: 'text', length: 50, nullable: false })
+  @Column({ name: 'FirstName', type: 'text' })
   firstName: string;
 
-  @Column({ name: 'LastName', type: 'text', length: 100, nullable: false })
+  @Column({ name: 'LastName', type: 'text' })
   lastName: string;
 
-  @Column({
-    name: 'Email',
-    type: 'text',
-    length: 100,
-    unique: true,
-    nullable: false,
-  })
+  @Column({ name: 'Email', type: 'text' })
   email: string;
 
-  @Column({
-    name: 'AccountPassword',
-    type: 'text',
-    length: 50,
-    nullable: false,
-  })
+  @Column({ name: 'AccountPassword', type: 'text' })
   accountPassword: string;
 
-  @Column({ name: 'Avatar', type: 'text', length: 255, nullable: true })
+  @Column({ name: 'Avatar', type: 'text' })
   avatar?: string;
 
-  @Column({ name: 'Company', type: 'text', length: 255, nullable: true })
+  @Column({ name: 'Company', type: 'text' })
   company?: string;
 
-  @Column({
-    name: 'AccountRole',
-    type: 'text',
-    length: 255,
-    nullable: true,
-  })
+  @Column({ name: 'AccountRole', type: 'text' })
   accountRole?: string;
 
-  @Column({
-    name: 'AccountStatus',
-    type: 'text',
-    length: 50,
-    nullable: false,
-  })
+  @Column({ name: 'AccountStatus', type: 'text' })
   accountStatus: string;
 
-  @CreateDateColumn({
-    name: 'CreatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'UpdatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'UpdatedAt', type: 'text' })
   updatedAt: Date;
-
-  @ManyToMany(() => Workspace, (workspace) => workspace.accounts)
-  @JoinTable({
-    name: 'AccountWorkspace',
-    joinColumn: {
-      name: 'AccountId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'WorkspaceId',
-      referencedColumnName: 'id',
-    },
-  })
-  workspaces: Workspace[];
 }

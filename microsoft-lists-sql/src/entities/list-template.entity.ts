@@ -4,71 +4,43 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-
-import { ListType } from './list-type.entity';
-import { TemplateProvider } from './template-provider.entity';
 
 @Entity('ListTemplate')
 export class ListTemplate {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'Title', type: 'text', length: 255, nullable: false })
+  @Column({ name: 'Title', type: 'text' })
   title: string;
 
-  @Column({ name: 'HeaderImage', type: 'text', length: 255, nullable: false })
+  @Column({ name: 'HeaderImage', type: 'text' })
   headerImage: string;
 
-  @Column({
-    name: 'TemplateDescription',
-    type: 'text',
-    length: 255,
-    nullable: true,
-  })
+  @Column({ name: 'TemplateDescription', type: 'text' })
   templateDescription?: string;
 
-  @Column({ name: 'Icon', type: 'text', length: 255, nullable: true })
+  @Column({ name: 'Icon', type: 'text' })
   icon?: string;
 
-  @Column({ name: 'Color', type: 'text', length: 255, nullable: true })
+  @Column({ name: 'Color', type: 'text' })
   color?: string;
 
-  @Column({ name: 'Summary', type: 'text', length: 255, nullable: true })
+  @Column({ name: 'Summary', type: 'text' })
   summary?: string;
 
-  @Column({ name: 'Feature', type: 'text', length: 255, nullable: true })
+  @Column({ name: 'Feature', type: 'text' })
   feature?: string;
 
-  @Column({ name: 'ListTypeId', type: 'integer', nullable: false })
+  @Column({ name: 'ListTypeId', type: 'integer' })
   listTypeId: number;
 
-  @Column({ name: 'TemplateProviderId', type: 'integer', nullable: false })
+  @Column({ name: 'TemplateProviderId', type: 'integer' })
   templateProviderId: number;
 
-  @CreateDateColumn({
-    name: 'CreatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'UpdatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'UpdatedAt', type: 'text' })
   updatedAt: Date;
-
-  @ManyToOne(() => ListType)
-  @JoinColumn({ name: 'ListTypeId' })
-  listType: ListType;
-
-  @ManyToOne(() => TemplateProvider)
-  @JoinColumn({ name: 'TemplateProviderId' })
-  templateProvider: TemplateProvider;
 }

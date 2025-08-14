@@ -4,38 +4,22 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
 } from 'typeorm';
-
-import { Account } from './account.entity';
 
 @Entity('Workspace')
 export class Workspace {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'WorkspaceName', type: 'text', nullable: false })
+  @Column({ name: 'WorkspaceName', type: 'text' })
   workspaceName: string;
 
-  @Column({ name: 'Icon', type: 'text', nullable: true })
+  @Column({ name: 'Icon', type: 'text' })
   icon?: string;
 
-  @CreateDateColumn({
-    name: 'CreatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'UpdatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'UpdatedAt', type: 'text' })
   updatedAt: Date;
-
-  @ManyToMany(() => Account, (account) => account.workspaces)
-  accounts: Account[];
 }

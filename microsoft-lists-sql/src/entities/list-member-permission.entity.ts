@@ -6,16 +6,19 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('TemplateSampleRow')
-export class TemplateSampleRow {
+@Entity('ListMemberPermission')
+export class ListMemberPermission {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'ListTemplateId', type: 'integer' })
-  listTemplateId: number;
+  @Column({ name: 'ListId', type: 'integer' })
+  listId: number;
 
-  @Column({ name: 'DisplayOrder', type: 'integer' })
-  displayOrder: number;
+  @Column({ name: 'AccountId', type: 'integer' })
+  accountId: number;
+
+  @Column({ name: 'HighestPermissionId', type: 'integer' })
+  highestPermissionId: number;
 
   @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;

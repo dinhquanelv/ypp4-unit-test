@@ -6,8 +6,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('TemplateColumn')
-export class TemplateColumn {
+@Entity('ListDynamicColumn')
+export class ListDynamicColumn {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
@@ -15,7 +15,7 @@ export class TemplateColumn {
   columnName: string;
 
   @Column({ name: 'ColumnDescription', type: 'text' })
-  columnDescription?: string;
+  columnDescription: string;
 
   @Column({ name: 'DisplayOrder', type: 'integer' })
   displayOrder: number;
@@ -23,11 +23,17 @@ export class TemplateColumn {
   @Column({ name: 'IsVisible', type: 'boolean' })
   isVisible: boolean;
 
+  @Column({ name: 'IsRequired', type: 'boolean' })
+  isRequired: boolean;
+
+  @Column({ name: 'CreatedBy', type: 'integer' })
+  createdBy: number;
+
+  @Column({ name: 'ListId', type: 'integer' })
+  listId: number;
+
   @Column({ name: 'SystemDataTypeId', type: 'integer' })
   systemDataTypeId: number;
-
-  @Column({ name: 'ListTemplateId', type: 'integer' })
-  listTemplateId: number;
 
   @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;

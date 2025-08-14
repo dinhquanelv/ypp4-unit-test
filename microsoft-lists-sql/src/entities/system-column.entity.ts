@@ -6,8 +6,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('TemplateColumn')
-export class TemplateColumn {
+@Entity('SystemColumn')
+export class SystemColumn {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
@@ -15,19 +15,19 @@ export class TemplateColumn {
   columnName: string;
 
   @Column({ name: 'ColumnDescription', type: 'text' })
-  columnDescription?: string;
+  columnDescription: string;
 
   @Column({ name: 'DisplayOrder', type: 'integer' })
   displayOrder: number;
 
-  @Column({ name: 'IsVisible', type: 'boolean' })
-  isVisible: boolean;
-
   @Column({ name: 'SystemDataTypeId', type: 'integer' })
   systemDataTypeId: number;
 
-  @Column({ name: 'ListTemplateId', type: 'integer' })
-  listTemplateId: number;
+  @Column({ name: 'IsVisible', type: 'boolean' })
+  isVisible: boolean;
+
+  @Column({ name: 'IsRequired', type: 'boolean' })
+  isRequired: boolean;
 
   @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;

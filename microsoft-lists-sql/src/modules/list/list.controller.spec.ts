@@ -8,9 +8,10 @@ import { ListRepository } from '../../modules/list/list.repository';
 
 describe('ListController', () => {
   let controller: ListController;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'sqlite',
@@ -24,6 +25,10 @@ describe('ListController', () => {
     }).compile();
 
     controller = module.get<ListController>(ListController);
+  });
+
+  afterAll(async () => {
+    await module.close();
   });
 
   it('should be defined', () => {
@@ -120,40 +125,6 @@ describe('ListController', () => {
       const result = await controller.findAllListsByAccountId(accountId);
 
       expect(result).toEqual([]);
-    });
-  });
-
-  describe('findAllListType', () => {
-    it('should return all list type', async () => {
-      const result = await controller.findAllListType();
-
-      expect(result.length).toBeGreaterThan(0);
-      result.forEach((item) => {
-        expect(item).toHaveProperty('id');
-        expect(item).toHaveProperty('icon');
-        expect(item).toHaveProperty('title');
-        expect(item).toHaveProperty('listTypeDescription');
-      });
-    });
-  });
-
-  describe('findOneListType', () => {
-    it('should return a list type if it exists', async () => {
-      const listTypeId = 1;
-      const result = await controller.findOneListType(listTypeId);
-
-      expect(result).toBeDefined();
-      expect(result).toHaveProperty('listTypeId');
-      expect(result).toHaveProperty('title');
-      expect(result).toHaveProperty('listTypeDescription');
-      expect(result).toHaveProperty('headerImage');
-    });
-
-    it('should return null if the list type does not exist', async () => {
-      const listTypeId = -1;
-      const result = await controller.findOneListType(listTypeId);
-
-      expect(result).toBeNull();
     });
   });
 

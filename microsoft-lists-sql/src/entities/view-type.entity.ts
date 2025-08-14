@@ -4,46 +4,28 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from 'typeorm';
-import { ViewTypeSetting } from './view-type-setting.entity';
 
 @Entity('ViewType')
 export class ViewType {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'TypeName', type: 'text', length: 50, nullable: false })
+  @Column({ name: 'TypeName', type: 'text' })
   typeName: string;
 
-  @Column({ name: 'DisplayName', type: 'text', length: 100, nullable: false })
+  @Column({ name: 'DisplayName', type: 'text' })
   displayName: string;
 
-  @Column({ name: 'HeaderImage', type: 'text', length: 100, nullable: false })
+  @Column({ name: 'HeaderImage', type: 'text' })
   headerImage: string;
 
-  @Column({ name: 'Icon', type: 'text', length: 100, nullable: false })
+  @Column({ name: 'Icon', type: 'text' })
   icon: string;
 
-  @CreateDateColumn({
-    name: 'CreatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    name: 'UpdatedAt',
-    type: 'text',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @UpdateDateColumn({ name: 'UpdatedAt', type: 'text' })
   updatedAt: Date;
-
-  @OneToMany(
-    () => ViewTypeSetting,
-    (viewTypeSetting) => viewTypeSetting.viewType,
-  )
-  viewTypeSettings: ViewTypeSetting[];
 }

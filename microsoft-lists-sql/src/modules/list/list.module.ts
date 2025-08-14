@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ListService } from './list.service';
 import { ListController } from './list.controller';
 import { List } from '../../entities/list.entity';
-import { ListRepository } from '../../modules/list/list.repository';
+import { ListRepository } from './list.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([List])],

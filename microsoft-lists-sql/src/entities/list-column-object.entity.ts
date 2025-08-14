@@ -6,25 +6,22 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('SystemDataType')
-export class SystemDataType {
+@Entity('ListColumnObject')
+export class ListColumnObject {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
+
+  @Column({ name: 'ListDynamicColumnId', type: 'integer' })
+  listDynamicColumnId: number;
 
   @Column({ name: 'DisplayName', type: 'text' })
   displayName: string;
 
-  @Column({ name: 'DataTypeValue', type: 'text' })
-  dataTypeValue: string;
+  @Column({ name: 'DisplayColor', type: 'text' })
+  displayColor: string;
 
-  @Column({ name: 'Icon', type: 'text' })
-  icon: string;
-
-  @Column({ name: 'TypeDescription', type: 'text' })
-  typeDescription: string;
-
-  @Column({ name: 'CoverImage', type: 'text' })
-  coverImage: string;
+  @Column({ name: 'DisplayOrder', type: 'integer' })
+  displayOrder: number;
 
   @CreateDateColumn({ name: 'CreatedAt', type: 'text' })
   createdAt: Date;

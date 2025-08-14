@@ -6,13 +6,13 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('TemplateViewSetting')
-export class TemplateViewSetting {
+@Entity('ListViewSetting')
+export class ListViewSetting {
   @PrimaryGeneratedColumn({ name: 'Id' })
   id: number;
 
-  @Column({ name: 'TemplateViewId', type: 'integer' })
-  templateViewId: number;
+  @Column({ name: 'ListViewId', type: 'integer' })
+  listViewId: number;
 
   @Column({ name: 'ViewTypeSettingId', type: 'integer' })
   viewTypeSettingId: number;
