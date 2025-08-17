@@ -1,4 +1,4 @@
-export class FindAccountDto {
+export class AccountDto {
   firstName: string;
   lastName: string;
   email: string;
