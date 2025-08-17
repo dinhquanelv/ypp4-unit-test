@@ -3,18 +3,27 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 
 import { Account } from '../../entities/account.entity';
-import { FindOneAccountDto } from '../../modules/account/dto/find-one-account.dto';
-import { SearchAccountDto } from './dto/search-account.dto';
+import { FindAccountDto } from './dto/find-account.dto';
+import { CacheService } from '../../utils/cache.service';
 
 @Injectable()
 export class AccountRepository {
   constructor(
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
+    private readonly cacheService: CacheService,
   ) {}
 
-  async findOneAccountById(id: number): Promise<FindOneAccountDto | null> {
-    const query: FindOneAccountDto[] = await this.accountRepository.query(
+  async findOne(id: number): Promise<FindAccountDto | null> {
+    const cacheKey = `account:${id}`;
+    const cachedAccount = this.cacheService.get<FindAccountDto>(cacheKey);
+
+    if (cachedAccount) {
+      return cachedAccount;
+    }
+
+    await this.accountRepository.query(`PRAGMA read_uncommitted = 1`);
+    const query: FindAccountDto[] = await this.accountRepository.query(
       `
         SELECT 
           FirstName as firstName, 
@@ -32,10 +41,9 @@ export class AccountRepository {
     return query.length > 0 ? query[0] : null;
   }
 
-  async searchAccountByEmailOrName(
-    input: string,
-  ): Promise<SearchAccountDto | null> {
-    const query: SearchAccountDto[] = await this.accountRepository.query(
+  async searchByEmailOrName(input: string): Promise<FindAccountDto[]> {
+    await this.accountRepository.query(`PRAGMA read_uncommitted = 1`);
+    const accounts: FindAccountDto[] = await this.accountRepository.query(
       `
         SELECT 
           FirstName as firstName, 
@@ -51,6 +59,6 @@ export class AccountRepository {
       [`%${input}%`, `%${input}%`, `%${input}%`],
     );
 
-    return query.length > 0 ? query[0] : null;
+    return accounts;
   }
 }
