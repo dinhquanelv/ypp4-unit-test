@@ -1,46 +1,36 @@
 import { Injectable } from '@nestjs/common';
 
-import { ListRepository } from '../../modules/list/list.repository';
-import { FindAllListDto } from '../../modules/list/dto/find-all-list.dto';
-import { FindRecentListsDto } from '../../modules/list/dto/find-recent-list.dto';
-import { FindOneListDto } from '../../modules/list/dto/find-one-list.dto';
+import { ListRepository } from './list.repository';
+import { QueryListDto } from './dto/query-list.dto';
 
 @Injectable()
 export class ListService {
   constructor(private readonly listRepository: ListRepository) {}
 
-  async searchAllListsByName(
+  async searchByName(
     input: string,
     pageNumber: number,
     pageSize: number,
-  ): Promise<FindAllListDto[]> {
-    return await this.listRepository.searchAllListsByName(
-      input,
-      pageNumber,
-      pageSize,
-    );
+  ): Promise<QueryListDto[]> {
+    return await this.listRepository.searchByName(input, pageNumber, pageSize);
   }
 
-  async findFavoriteListsByAccountId(
-    accountId: number,
-  ): Promise<FindAllListDto[]> {
-    return await this.listRepository.findFavoriteListsByAccountId(accountId);
+  async findFavoritesByAccountId(accountId: number): Promise<QueryListDto[]> {
+    return await this.listRepository.findFavoritesByAccountId(accountId);
   }
 
-  async findRecentListsByAccountId(
-    accountId: number,
-  ): Promise<FindRecentListsDto[]> {
-    return await this.listRepository.findRecentListsByAccountId(accountId);
+  async findRecentByAccountId(accountId: number): Promise<QueryListDto[]> {
+    return await this.listRepository.findRecentByAccountId(accountId);
   }
 
-  async findAllListsByAccountId(accountId: number): Promise<FindAllListDto[]> {
-    return await this.listRepository.findAllListsByAccountId(accountId);
+  async findAllByAccountId(accountId: number): Promise<QueryListDto[]> {
+    return await this.listRepository.findAllByAccountId(accountId);
   }
 
-  async findOneListById(
+  async findOneById(
     accountId: number,
     listId: number,
-  ): Promise<FindOneListDto | null> {
-    return await this.listRepository.findOneListById(accountId, listId);
+  ): Promise<QueryListDto | null> {
+    return await this.listRepository.findOneById(accountId, listId);
   }
 }
