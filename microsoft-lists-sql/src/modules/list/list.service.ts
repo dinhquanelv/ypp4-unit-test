@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { ListRepository } from './list.repository';
-import { QueryListDto } from './dto/query-list.dto';
+import { ListDto } from './dto/list.dto';
 
 @Injectable()
 export class ListService {
@@ -11,26 +11,26 @@ export class ListService {
     input: string,
     pageNumber: number,
     pageSize: number,
-  ): Promise<QueryListDto[]> {
+  ): Promise<ListDto[]> {
     return await this.listRepository.searchByName(input, pageNumber, pageSize);
   }
 
-  async findFavoritesByAccountId(accountId: number): Promise<QueryListDto[]> {
+  async findFavoritesByAccountId(accountId: number): Promise<ListDto[]> {
     return await this.listRepository.findFavoritesByAccountId(accountId);
   }
 
-  async findRecentByAccountId(accountId: number): Promise<QueryListDto[]> {
+  async findRecentByAccountId(accountId: number): Promise<ListDto[]> {
     return await this.listRepository.findRecentByAccountId(accountId);
   }
 
-  async findAllByAccountId(accountId: number): Promise<QueryListDto[]> {
+  async findAllByAccountId(accountId: number): Promise<ListDto[]> {
     return await this.listRepository.findAllByAccountId(accountId);
   }
 
   async findOneById(
     accountId: number,
     listId: number,
-  ): Promise<QueryListDto | null> {
+  ): Promise<ListDto | null> {
     return await this.listRepository.findOneById(accountId, listId);
   }
 }
