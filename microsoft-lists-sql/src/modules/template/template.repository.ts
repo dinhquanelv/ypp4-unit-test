@@ -3,44 +3,59 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { ListTemplate } from '../../entities/list-template.entity';
-import { FindAllByProviderIdDto } from './dto/find-all-by-provider-id.dto';
-import { FindOneTemplateByIdDto } from './dto/find-one-template-by-id.dto';
-import { FindAllColumnsByListTemplateIdDto } from './dto/find-all-columns-by-list-template-id.dto';
-import { FindAllTemplateSampleCellValuesByListTemplateIdDto } from './dto/find-all-template-sample-cell-values-by-list-template-id.dto';
-import { FindAllViewsByListTemplateIdDto } from './dto/find-all-views-by-list-template-id.dto';
+import { TemplateDto } from './dto/template.dto';
+import { TemplateDetailDto } from './dto/template-detail.dto';
+import { ColumnDto } from './dto/column.dto';
+import { SampleCellValue } from './dto/sample-cell-value.dto';
+import { ViewDto } from './dto/view.dto';
+import { CacheService } from '../../utils/cache.service';
 
 @Injectable()
 export class TemplateRepository {
   constructor(
     @InjectRepository(ListTemplate)
     private readonly listTemplateRepository: Repository<ListTemplate>,
+    private readonly cacheService: CacheService,
   ) {}
 
-  async findAllByProviderId(
-    providerId: number,
-  ): Promise<FindAllByProviderIdDto[]> {
-    const templates: FindAllByProviderIdDto[] =
-      await this.listTemplateRepository.query(
-        `
-          SELECT 
-            Id as id, 
-            Title as title, 
-            HeaderImage as headerImage, 
-            TemplateDescription as templateDescription
-          FROM 
-            ListTemplate 
-          WHERE 
-            TemplateProviderId = ?`,
-        [providerId],
-      );
+  async findAllByProviderId(providerId: number): Promise<TemplateDto[]> {
+    const cacheKey = `templates:${providerId}`;
+    const cached = this.cacheService.get<TemplateDto[]>(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    await this.listTemplateRepository.query(`PRAGMA read_uncommitted = 1`);
+    const templates: TemplateDto[] = await this.listTemplateRepository.query(
+      `
+      SELECT 
+        Id as id, 
+        Title as title, 
+        HeaderImage as headerImage, 
+        TemplateDescription as templateDescription
+      FROM 
+        ListTemplate 
+      WHERE 
+        TemplateProviderId = ?`,
+      [providerId],
+    );
+
+    this.cacheService.set(cacheKey, templates);
 
     return templates;
   }
 
-  async findOneTemplateById(
-    templateId: number,
-  ): Promise<FindOneTemplateByIdDto | null> {
-    const template: FindOneTemplateByIdDto[] =
+  async findOne(templateId: number): Promise<TemplateDetailDto | null> {
+    const cacheKey = `template:${templateId}`;
+    const cached = this.cacheService.get<TemplateDetailDto>(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    await this.listTemplateRepository.query(`PRAGMA read_uncommitted = 1`);
+    const template: TemplateDetailDto[] =
       await this.listTemplateRepository.query(
         `
         SELECT
@@ -56,13 +71,22 @@ export class TemplateRepository {
         `,
         [templateId],
       );
+
+    this.cacheService.set(cacheKey, template[0]);
+
     return template.length > 0 ? template[0] : null;
   }
 
-  async findAllColumnsByListTemplateId(
-    listTemplateId: number,
-  ): Promise<FindAllColumnsByListTemplateIdDto[]> {
-    const templateColumns: FindAllColumnsByListTemplateIdDto[] =
+  async findAllColumns(listTemplateId: number): Promise<ColumnDto[]> {
+    const cacheKey = `templateColumns:${listTemplateId}`;
+    const cached = this.cacheService.get<ColumnDto[]>(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    await this.listTemplateRepository.query(`PRAGMA read_uncommitted = 1`);
+    const templateColumns: ColumnDto[] =
       await this.listTemplateRepository.query(
         `
         SELECT
@@ -79,12 +103,14 @@ export class TemplateRepository {
         `,
         [listTemplateId],
       );
+
+    this.cacheService.set(cacheKey, templateColumns);
+
     return templateColumns;
   }
 
-  async findAllTemplateSampleCellValuesByListTemplateId(
-    listTemplateId: number,
-  ): Promise<FindAllTemplateSampleCellValuesByListTemplateIdDto[]> {
+  async findAllCellValues(listTemplateId: number): Promise<SampleCellValue[]> {
+    await this.listTemplateRepository.query(`PRAGMA read_uncommitted = 1`);
     const columnsResult: { columns: string }[] =
       await this.listTemplateRepository.query(
         `
@@ -140,12 +166,17 @@ export class TemplateRepository {
     ]);
   }
 
-  async findAllViewsByListTemplateId(
-    listTemplateId: number,
-  ): Promise<FindAllViewsByListTemplateIdDto[]> {
-    const templateViews: FindAllViewsByListTemplateIdDto[] =
-      await this.listTemplateRepository.query(
-        `
+  async findAllViews(listTemplateId: number): Promise<ViewDto[]> {
+    const cacheKey = `templateViews:${listTemplateId}`;
+    const cached = this.cacheService.get<ViewDto[]>(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    await this.listTemplateRepository.query(`PRAGMA read_uncommitted = 1`);
+    const templateViews: ViewDto[] = await this.listTemplateRepository.query(
+      `
         SELECT
           tv.Id AS templateViewId,
           vt.Icon AS icon,
@@ -158,8 +189,11 @@ export class TemplateRepository {
         ORDER BY
           tv.DisplayOrder
         `,
-        [listTemplateId],
-      );
+      [listTemplateId],
+    );
+
+    this.cacheService.set(cacheKey, templateViews);
+
     return templateViews;
   }
 }

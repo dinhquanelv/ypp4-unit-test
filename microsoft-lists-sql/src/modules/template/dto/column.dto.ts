@@ -1,4 +1,4 @@
-export class FindAllColumnsByListTemplateIdDto {
+export class ColumnDto {
   templateColumnId: number;
   icon: string;
   columnName: string;

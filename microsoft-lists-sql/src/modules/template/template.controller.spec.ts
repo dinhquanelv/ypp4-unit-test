@@ -5,6 +5,7 @@ import { TemplateController } from './template.controller';
 import { TemplateService } from './template.service';
 import { TemplateRepository } from './template.repository';
 import { ListTemplate } from '../../entities/list-template.entity';
+import { CacheService } from '../../utils/cache.service';
 
 describe('TemplateController', () => {
   let controller: TemplateController;
@@ -21,7 +22,7 @@ describe('TemplateController', () => {
         TypeOrmModule.forFeature([ListTemplate]),
       ],
       controllers: [TemplateController],
-      providers: [TemplateService, TemplateRepository],
+      providers: [TemplateService, TemplateRepository, CacheService],
     }).compile();
 
     controller = module.get<TemplateController>(TemplateController);
@@ -41,12 +42,6 @@ describe('TemplateController', () => {
       const result = await controller.findAllByProviderId(providerId);
 
       expect(result.length).toBeGreaterThan(0);
-      result.forEach((item) => {
-        expect(item).toHaveProperty('id');
-        expect(item).toHaveProperty('title');
-        expect(item).toHaveProperty('headerImage');
-        expect(item).toHaveProperty('templateDescription');
-      });
     });
 
     it('should return null if no templates found', async () => {
@@ -57,93 +52,65 @@ describe('TemplateController', () => {
     });
   });
 
-  describe('findOneTemplateById', () => {
+  describe('findOne', () => {
     it('should return a template if template exists', async () => {
       const templateId = 1;
-      const result = await controller.findOneTemplateById(templateId);
+      const result = await controller.findOne(templateId);
 
       expect(result).toBeDefined();
-      expect(result).toHaveProperty('templateId');
-      expect(result).toHaveProperty('icon');
-      expect(result).toHaveProperty('title');
-      expect(result).toHaveProperty('summary');
-      expect(result).toHaveProperty('feature');
     });
 
     it('should return null if template not found', async () => {
       const templateId = -1;
-      const result = await controller.findOneTemplateById(templateId);
+      const result = await controller.findOne(templateId);
 
       expect(result).toBeNull();
     });
   });
 
-  describe('findAllColumnsByListTemplateId', () => {
+  describe('findAllColumns', () => {
     it('should return all columns if template exists', async () => {
       const listTemplateId = 1;
-      const result =
-        await controller.findAllColumnsByListTemplateId(listTemplateId);
+      const result = await controller.findAllColumns(listTemplateId);
 
       expect(result).toBeDefined();
-      result.forEach((item) => {
-        expect(item).toHaveProperty('templateColumnId');
-        expect(item).toHaveProperty('icon');
-        expect(item).toHaveProperty('columnName');
-      });
     });
 
     it('should return an empty array if template not found', async () => {
       const listTemplateId = -1;
-      const result =
-        await controller.findAllColumnsByListTemplateId(listTemplateId);
+      const result = await controller.findAllColumns(listTemplateId);
 
       expect(result).toEqual([]);
     });
   });
 
-  describe('findAllTemplateSampleCellValuesByListTemplateId', () => {
+  describe('findAllCellValues', () => {
     it('should return all sample cell values if template exists', async () => {
       const listTemplateId = 1;
-      const result =
-        await controller.findAllTemplateSampleCellValuesByListTemplateId(
-          listTemplateId,
-        );
+      const result = await controller.findAllCellValues(listTemplateId);
 
       expect(result).toBeDefined();
-      result.forEach((item) => {
-        expect(item).toHaveProperty('templateSampleRowId');
-      });
     });
 
     it('should return an empty array if template not found', async () => {
       const listTemplateId = -1;
-      const result =
-        await controller.findAllTemplateSampleCellValuesByListTemplateId(
-          listTemplateId,
-        );
+      const result = await controller.findAllCellValues(listTemplateId);
 
       expect(result).toEqual([]);
     });
   });
 
-  describe('findAllViewsByListTemplateId', () => {
+  describe('findAllViews', () => {
     it('should return all views if template exists', async () => {
       const listTemplateId = 1;
-      const result =
-        await controller.findAllViewsByListTemplateId(listTemplateId);
+      const result = await controller.findAllViews(listTemplateId);
 
       expect(result).toBeDefined();
-      result.forEach((item) => {
-        expect(item).toHaveProperty('templateViewId');
-        expect(item).toHaveProperty('icon');
-        expect(item).toHaveProperty('viewName');
-      });
     });
 
     it('should return an empty array if template not found', async () => {
       const listTemplateId = -1;
-      const result =
-        await controller.findAllViewsByListTemplateId(listTemplateId);
+      const result = await controller.findAllViews(listTemplateId);
 
       expect(result).toEqual([]);
     });

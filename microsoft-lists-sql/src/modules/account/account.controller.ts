@@ -1,18 +1,17 @@
 import { Controller } from '@nestjs/common';
 
 import { AccountService } from './account.service';
-import { FindOneAccountDto } from '../../modules/account/dto/find-one-account.dto';
-import { SearchAccountDto } from '../../modules/account/dto/search-account.dto';
+import { AccountDto } from './dto/account.dto';
 
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
-  findOneAccountById(id: number): Promise<FindOneAccountDto | null> {
-    return this.accountService.findOneAccountById(id);
+  findOne(id: number): Promise<AccountDto | null> {
+    return this.accountService.findOne(id);
   }
 
-  searchAccountByEmailOrName(name: string): Promise<SearchAccountDto | null> {
-    return this.accountService.searchAccountByEmailOrName(name);
+  searchByEmailOrName(name: string): Promise<AccountDto[]> {
+    return this.accountService.searchByEmailOrName(name);
   }
 }

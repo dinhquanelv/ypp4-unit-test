@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
-import { insertData } from './insert-data.seed';
-import { createTables } from './create-tables.seed';
+import { createTables } from './001-create-tables.seed';
+import { insertData } from './002-insert-data.seed';
 
 export async function runAllSeeds(dataSource: DataSource): Promise<void> {
   console.log('>>> Starting database seeding...');

@@ -1,4 +1,4 @@
-export class QueryListDto {
+export class ListDto {
   listId: number;
   color: string;
   icon: string;

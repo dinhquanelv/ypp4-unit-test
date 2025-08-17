@@ -1,49 +1,33 @@
 import { Injectable } from '@nestjs/common';
 
 import { TemplateRepository } from './template.repository';
-import { FindAllByProviderIdDto } from './dto/find-all-by-provider-id.dto';
-import { FindOneTemplateByIdDto } from './dto/find-one-template-by-id.dto';
-import { FindAllColumnsByListTemplateIdDto } from './dto/find-all-columns-by-list-template-id.dto';
-import { FindAllTemplateSampleCellValuesByListTemplateIdDto } from './dto/find-all-template-sample-cell-values-by-list-template-id.dto';
-import { FindAllViewsByListTemplateIdDto } from './dto/find-all-views-by-list-template-id.dto';
+import { TemplateDto } from './dto/template.dto';
+import { TemplateDetailDto } from './dto/template-detail.dto';
+import { ColumnDto } from './dto/column.dto';
+import { SampleCellValue } from './dto/sample-cell-value.dto';
+import { ViewDto } from './dto/view.dto';
 
 @Injectable()
 export class TemplateService {
   constructor(private readonly templateRepository: TemplateRepository) {}
 
-  async findAllByProviderId(
-    providerId: number,
-  ): Promise<FindAllByProviderIdDto[]> {
+  async findAllByProviderId(providerId: number): Promise<TemplateDto[]> {
     return await this.templateRepository.findAllByProviderId(providerId);
   }
 
-  async findOneTemplateById(
-    templateId: number,
-  ): Promise<FindOneTemplateByIdDto | null> {
-    return await this.templateRepository.findOneTemplateById(templateId);
+  async findOne(templateId: number): Promise<TemplateDetailDto | null> {
+    return await this.templateRepository.findOne(templateId);
   }
 
-  async findAllColumnsByListTemplateId(
-    listTemplateId: number,
-  ): Promise<FindAllColumnsByListTemplateIdDto[]> {
-    return await this.templateRepository.findAllColumnsByListTemplateId(
-      listTemplateId,
-    );
+  async findAllColumns(listTemplateId: number): Promise<ColumnDto[]> {
+    return await this.templateRepository.findAllColumns(listTemplateId);
   }
 
-  async findAllTemplateSampleCellValuesByListTemplateId(
-    listTemplateId: number,
-  ): Promise<FindAllTemplateSampleCellValuesByListTemplateIdDto[]> {
-    return await this.templateRepository.findAllTemplateSampleCellValuesByListTemplateId(
-      listTemplateId,
-    );
+  async findAllCellValues(listTemplateId: number): Promise<SampleCellValue[]> {
+    return await this.templateRepository.findAllCellValues(listTemplateId);
   }
 
-  async findAllViewsByListTemplateId(
-    listTemplateId: number,
-  ): Promise<FindAllViewsByListTemplateIdDto[]> {
-    return await this.templateRepository.findAllViewsByListTemplateId(
-      listTemplateId,
-    );
+  async findAllViews(listTemplateId: number): Promise<ViewDto[]> {
+    return await this.templateRepository.findAllViews(listTemplateId);
   }
 }

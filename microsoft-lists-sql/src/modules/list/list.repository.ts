@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { List } from '../../entities/list.entity';
-import { QueryListDto } from './dto/query-list.dto';
+import { ListDto } from './dto/list.dto';
 import { CacheService } from '../../utils/cache.service';
 
 @Injectable()
@@ -18,11 +18,11 @@ export class ListRepository {
     input: string,
     pageNumber: number,
     pageSize: number,
-  ): Promise<QueryListDto[]> {
+  ): Promise<ListDto[]> {
     const offset = (pageNumber - 1) * pageSize;
 
     await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
-    const lists: QueryListDto[] = await this.listRepository.query(
+    const lists: ListDto[] = await this.listRepository.query(
       `
         SELECT 
           l.Id AS listId,
@@ -45,16 +45,16 @@ export class ListRepository {
     return lists;
   }
 
-  async findFavoritesByAccountId(accountId: number): Promise<QueryListDto[]> {
+  async findFavoritesByAccountId(accountId: number): Promise<ListDto[]> {
     const cacheKey = `favoriteLists:${accountId}`;
-    const cachedLists = this.cacheService.get<QueryListDto[]>(cacheKey);
+    const cachedLists = this.cacheService.get<ListDto[]>(cacheKey);
 
     if (cachedLists) {
       return cachedLists;
     }
 
     await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
-    const lists: QueryListDto[] = await this.listRepository.query(
+    const lists: ListDto[] = await this.listRepository.query(
       `
         SELECT
           l.Id AS listId,
@@ -78,16 +78,16 @@ export class ListRepository {
     return lists;
   }
 
-  async findRecentByAccountId(accountId: number): Promise<QueryListDto[]> {
+  async findRecentByAccountId(accountId: number): Promise<ListDto[]> {
     const cacheKey = `recentLists:${accountId}`;
-    const cachedLists = this.cacheService.get<QueryListDto[]>(cacheKey);
+    const cachedLists = this.cacheService.get<ListDto[]>(cacheKey);
 
     if (cachedLists) {
       return cachedLists;
     }
 
     await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
-    const lists: QueryListDto[] = await this.listRepository.query(
+    const lists: ListDto[] = await this.listRepository.query(
       `
         SELECT
           l.Id AS listId,
@@ -114,16 +114,16 @@ export class ListRepository {
     return lists;
   }
 
-  async findAllByAccountId(accountId: number): Promise<QueryListDto[]> {
+  async findAllByAccountId(accountId: number): Promise<ListDto[]> {
     const cacheKey = `allLists:${accountId}`;
-    const cachedLists = this.cacheService.get<QueryListDto[]>(cacheKey);
+    const cachedLists = this.cacheService.get<ListDto[]>(cacheKey);
 
     if (cachedLists) {
       return cachedLists;
     }
 
     await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
-    const lists: QueryListDto[] = await this.listRepository.query(
+    const lists: ListDto[] = await this.listRepository.query(
       `
         SELECT
           l.Id AS listId,
@@ -152,16 +152,16 @@ export class ListRepository {
   async findOneById(
     accountId: number,
     listId: number,
-  ): Promise<QueryListDto | null> {
+  ): Promise<ListDto | null> {
     const cacheKey = `list:${accountId}:${listId}`;
-    const cachedList = this.cacheService.get<QueryListDto>(cacheKey);
+    const cachedList = this.cacheService.get<ListDto>(cacheKey);
 
     if (cachedList) {
       return cachedList;
     }
 
     await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
-    const list: QueryListDto[] = await this.listRepository.query(
+    const list: ListDto[] = await this.listRepository.query(
       `
         SELECT
           l.Id AS listId,

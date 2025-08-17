@@ -5,10 +5,11 @@ import { TemplateService } from './template.service';
 import { TemplateController } from './template.controller';
 import { ListTemplate } from '../../entities/list-template.entity';
 import { TemplateRepository } from './template.repository';
+import { CacheService } from '../../utils/cache.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ListTemplate])],
   controllers: [TemplateController],
-  providers: [TemplateService, TemplateRepository],
+  providers: [TemplateService, TemplateRepository, CacheService],
 })
 export class TemplateModule {}
