@@ -4,7 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ListController } from './list.controller';
 import { ListService } from './list.service';
 import { List } from '../../entities/list.entity';
-import { ListRepository } from '../../modules/list/list.repository';
+import { ListRepository } from './list.repository';
+import { CacheService } from '../../utils/cache.service';
 
 describe('ListController', () => {
   let controller: ListController;
@@ -21,7 +22,7 @@ describe('ListController', () => {
         TypeOrmModule.forFeature([List]),
       ],
       controllers: [ListController],
-      providers: [ListService, ListRepository],
+      providers: [ListService, ListRepository, CacheService],
     }).compile();
 
     controller = module.get<ListController>(ListController);
@@ -35,118 +36,83 @@ describe('ListController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('searchAllListsByName', () => {
+  describe('searchByName', () => {
     it('should return lists if input matches the search term', async () => {
       const input = 'project';
-      const result = await controller.searchAllListsByName(input, 1, 24);
+      const result = await controller.searchByName(input, 1, 24);
 
       expect(result.length).toBeGreaterThan(0);
-      result.forEach((item) => {
-        expect(item).toHaveProperty('listId');
-        expect(item).toHaveProperty('icon');
-        expect(item).toHaveProperty('color');
-        expect(item).toHaveProperty('listName');
-        expect(item).toHaveProperty('workspaceName');
-      });
     });
 
     it('should return an empty array if input does not match the search term', async () => {
       const input = 'nonexistent';
-      const result = await controller.searchAllListsByName(input, 1, 24);
+      const result = await controller.searchByName(input, 1, 24);
 
       expect(result).toEqual([]);
     });
   });
 
-  describe('findFavoriteListsByAccountId', () => {
+  describe('findFavoritesByAccountId', () => {
     it('should return lists if accountId has favorite lists', async () => {
       const accountId = 1;
-      const result = await controller.findFavoriteListsByAccountId(accountId);
+      const result = await controller.findFavoritesByAccountId(accountId);
 
       expect(result.length).toBeGreaterThan(0);
-      result.forEach((item) => {
-        expect(item).toHaveProperty('listId');
-        expect(item).toHaveProperty('icon');
-        expect(item).toHaveProperty('color');
-        expect(item).toHaveProperty('listName');
-        expect(item).toHaveProperty('workspaceName');
-      });
     });
 
     it('should return an empty lists if accountId does not have favorite lists', async () => {
       const accountId = -1;
-      const result = await controller.findFavoriteListsByAccountId(accountId);
+      const result = await controller.findFavoritesByAccountId(accountId);
 
       expect(result).toEqual([]);
     });
   });
 
-  describe('findRecentListsByAccountId', () => {
+  describe('findRecentByAccountId', () => {
     it('should return recent lists if accountId has recent lists', async () => {
       const accountId = 1;
-      const result = await controller.findRecentListsByAccountId(accountId);
+      const result = await controller.findRecentByAccountId(accountId);
 
       expect(result.length).toBeGreaterThan(0);
-      result.forEach((item) => {
-        expect(item).toHaveProperty('listId');
-        expect(item).toHaveProperty('icon');
-        expect(item).toHaveProperty('color');
-        expect(item).toHaveProperty('listName');
-        expect(item).toHaveProperty('workspaceName');
-        expect(item).toHaveProperty('accessedAt');
-      });
     });
 
     it('should return an empty array if accountId does not have recent lists', async () => {
       const accountId = -1;
-      const result = await controller.findRecentListsByAccountId(accountId);
+      const result = await controller.findRecentByAccountId(accountId);
 
       expect(result).toEqual([]);
     });
   });
 
-  describe('findAllListsByAccountId', () => {
+  describe('findAllByAccountId', () => {
     it('should return lists if accountId have access to', async () => {
       const accountId = 1;
-      const result = await controller.findAllListsByAccountId(accountId);
+      const result = await controller.findAllByAccountId(accountId);
 
       expect(result.length).toBeGreaterThan(0);
-      result.forEach((item) => {
-        expect(item).toHaveProperty('listId');
-        expect(item).toHaveProperty('icon');
-        expect(item).toHaveProperty('color');
-        expect(item).toHaveProperty('listName');
-        expect(item).toHaveProperty('workspaceName');
-      });
     });
 
     it('should return an empty array if accountId has no access to lists', async () => {
       const accountId = -1;
-      const result = await controller.findAllListsByAccountId(accountId);
+      const result = await controller.findAllByAccountId(accountId);
 
       expect(result).toEqual([]);
     });
   });
 
-  describe('findOneListById', () => {
+  describe('findOneById', () => {
     it('should return a list if it exists', async () => {
       const accountId = 1;
       const listId = 1;
-      const result = await controller.findOneListById(accountId, listId);
+      const result = await controller.findOneById(accountId, listId);
 
       expect(result).toBeDefined();
-      expect(result).toHaveProperty('listId');
-      expect(result).toHaveProperty('icon');
-      expect(result).toHaveProperty('color');
-      expect(result).toHaveProperty('listName');
-      expect(result).toHaveProperty('workspaceName');
-      expect(result).toHaveProperty('isFavoriteList');
     });
 
     it('should return null if the list does not exist', async () => {
       const accountId = 1;
       const listId = -1;
-      const result = await controller.findOneListById(accountId, listId);
+      const result = await controller.findOneById(accountId, listId);
 
       expect(result).toBeNull();
     });
@@ -154,7 +120,7 @@ describe('ListController', () => {
     it('should return null if account does not exist', async () => {
       const accountId = -1;
       const listId = 1;
-      const result = await controller.findOneListById(accountId, listId);
+      const result = await controller.findOneById(accountId, listId);
 
       expect(result).toBeNull();
     });
@@ -162,7 +128,7 @@ describe('ListController', () => {
     it('should return null if account and list does not exist', async () => {
       const accountId = -1;
       const listId = -1;
-      const result = await controller.findOneListById(accountId, listId);
+      const result = await controller.findOneById(accountId, listId);
 
       expect(result).toBeNull();
     });

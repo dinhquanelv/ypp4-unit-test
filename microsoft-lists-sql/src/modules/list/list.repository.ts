@@ -3,31 +3,33 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { List } from '../../entities/list.entity';
-import { FindAllListDto } from './dto/find-all-list.dto';
-import { FindRecentListsDto } from './dto/find-recent-list.dto';
-import { FindOneListDto } from './dto/find-one-list.dto';
+import { QueryListDto } from './dto/query-list.dto';
+import { CacheService } from '../../utils/cache.service';
 
 @Injectable()
 export class ListRepository {
   constructor(
     @InjectRepository(List)
     private readonly listRepository: Repository<List>,
+    private readonly cacheService: CacheService,
   ) {}
 
-  async searchAllListsByName(
+  async searchByName(
     input: string,
     pageNumber: number,
     pageSize: number,
-  ): Promise<FindAllListDto[]> {
+  ): Promise<QueryListDto[]> {
     const offset = (pageNumber - 1) * pageSize;
-    const lists: FindAllListDto[] = await this.listRepository.query(
+
+    await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
+    const lists: QueryListDto[] = await this.listRepository.query(
       `
         SELECT 
           l.Id AS listId,
-          l.Icon AS icon,
           l.Color AS color,
-          l.ListName AS listName,
-          w.WorkspaceName AS workspaceName
+          l.Icon AS icon,
+          w.WorkspaceName AS workspaceName,
+          l.ListName AS listName
         FROM
           List l
           JOIN Workspace w ON w.Id = l.WorkspaceId
@@ -43,17 +45,23 @@ export class ListRepository {
     return lists;
   }
 
-  async findFavoriteListsByAccountId(
-    accountId: number,
-  ): Promise<FindAllListDto[]> {
-    const lists: FindAllListDto[] = await this.listRepository.query(
+  async findFavoritesByAccountId(accountId: number): Promise<QueryListDto[]> {
+    const cacheKey = `favoriteLists:${accountId}`;
+    const cachedLists = this.cacheService.get<QueryListDto[]>(cacheKey);
+
+    if (cachedLists) {
+      return cachedLists;
+    }
+
+    await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
+    const lists: QueryListDto[] = await this.listRepository.query(
       `
         SELECT
           l.Id AS listId,
-          l.Icon AS icon,
           l.Color AS color,
-          w.WorkspaceName AS workspaceName,
-          l.ListName AS listName
+          l.Icon AS icon,
+          l.ListName AS listName,
+          w.WorkspaceName AS workspaceName
         FROM
           List l
           JOIN FavoriteList fl ON fl.Id = l.Id
@@ -64,20 +72,29 @@ export class ListRepository {
     `,
       [accountId],
     );
+
+    this.cacheService.set(cacheKey, lists, 300);
+
     return lists;
   }
 
-  async findRecentListsByAccountId(
-    accountId: number,
-  ): Promise<FindRecentListsDto[]> {
-    const lists: FindRecentListsDto[] = await this.listRepository.query(
+  async findRecentByAccountId(accountId: number): Promise<QueryListDto[]> {
+    const cacheKey = `recentLists:${accountId}`;
+    const cachedLists = this.cacheService.get<QueryListDto[]>(cacheKey);
+
+    if (cachedLists) {
+      return cachedLists;
+    }
+
+    await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
+    const lists: QueryListDto[] = await this.listRepository.query(
       `
         SELECT
           l.Id AS listId,
           l.Color AS color,
           l.Icon AS icon,
-          l.ListName AS listName,
           w.WorkspaceName AS workspaceName,
+          l.ListName AS listName,
           l.AccessedAt AS accessedAt
         FROM
           List l
@@ -91,18 +108,29 @@ export class ListRepository {
         `,
       [accountId],
     );
+
+    this.cacheService.set(cacheKey, lists, 300);
+
     return lists;
   }
 
-  async findAllListsByAccountId(accountId: number): Promise<FindAllListDto[]> {
-    const lists: FindAllListDto[] = await this.listRepository.query(
+  async findAllByAccountId(accountId: number): Promise<QueryListDto[]> {
+    const cacheKey = `allLists:${accountId}`;
+    const cachedLists = this.cacheService.get<QueryListDto[]>(cacheKey);
+
+    if (cachedLists) {
+      return cachedLists;
+    }
+
+    await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
+    const lists: QueryListDto[] = await this.listRepository.query(
       `
         SELECT
           l.Id AS listId,
           l.Color AS color,
           l.Icon AS icon,
-          l.ListName AS listName,
-          w.WorkspaceName AS workspaceName
+          w.WorkspaceName AS workspaceName,
+          l.ListName AS listName
         FROM
           List l
           JOIN AccountList al ON al.ListId = l.Id
@@ -115,19 +143,30 @@ export class ListRepository {
         `,
       [accountId],
     );
+
+    this.cacheService.set(cacheKey, lists, 300);
+
     return lists;
   }
 
-  async findOneListById(
+  async findOneById(
     accountId: number,
     listId: number,
-  ): Promise<FindOneListDto | null> {
-    const list: FindOneListDto[] = await this.listRepository.query(
+  ): Promise<QueryListDto | null> {
+    const cacheKey = `list:${accountId}:${listId}`;
+    const cachedList = this.cacheService.get<QueryListDto>(cacheKey);
+
+    if (cachedList) {
+      return cachedList;
+    }
+
+    await this.listRepository.query(`PRAGMA read_uncommitted = 1`);
+    const list: QueryListDto[] = await this.listRepository.query(
       `
         SELECT
           l.Id AS listId,
-          l.Icon AS icon,
           l.Color AS color,
+          l.Icon AS icon,
           w.WorkspaceName AS workspaceName,
           l.ListName AS listName,
           CASE
@@ -145,6 +184,9 @@ export class ListRepository {
         `,
       [accountId, accountId, listId],
     );
+
+    this.cacheService.set(cacheKey, list[0], 300);
+
     return list.length > 0 ? list[0] : null;
   }
 }
