@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { ListType } from '../../entities/list-type.entity';
-import { FindListTypeDto } from './dto/find-list-type.dto';
+import { ListTypeDto } from './dto/list-type.dto';
 import { CacheService } from '../../utils/cache.service';
 
 @Injectable()
@@ -14,16 +14,16 @@ export class ListTypeRepository {
     private readonly cacheService: CacheService,
   ) {}
 
-  async findAll(): Promise<FindListTypeDto[]> {
+  async findAll(): Promise<ListTypeDto[]> {
     const cacheKey = `listTypes:all`;
-    const cached = this.cacheService.get<FindListTypeDto[]>(cacheKey);
+    const cached = this.cacheService.get<ListTypeDto[]>(cacheKey);
 
     if (cached) {
       return cached;
     }
 
     await this.listTypeRepository.query(`PRAGMA read_uncommitted = 1`);
-    const query: FindListTypeDto[] = await this.listTypeRepository.query(
+    const query: ListTypeDto[] = await this.listTypeRepository.query(
       `
         SELECT
           Id AS id,
@@ -40,16 +40,16 @@ export class ListTypeRepository {
     return query;
   }
 
-  async findOne(listTypeId: number): Promise<FindListTypeDto | null> {
+  async findOne(listTypeId: number): Promise<ListTypeDto | null> {
     const cacheKey = `listTypes:${listTypeId}`;
-    const cached = this.cacheService.get<FindListTypeDto>(cacheKey);
+    const cached = this.cacheService.get<ListTypeDto>(cacheKey);
 
     if (cached) {
       return cached;
     }
 
     await this.listTypeRepository.query(`PRAGMA read_uncommitted = 1`);
-    const list: FindListTypeDto[] = await this.listTypeRepository.query(
+    const list: ListTypeDto[] = await this.listTypeRepository.query(
       `
         SELECT
           Id AS listTypeId,

@@ -1,4 +1,4 @@
-export class FindListTypeDto {
+export class ListTypeDto {
   listTypeId: number;
   icon?: string;
   title: string;
