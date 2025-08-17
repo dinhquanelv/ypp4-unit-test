@@ -1,6 +1,7 @@
-export class FindOneListTypeDto {
+export class FindListTypeDto {
   listTypeId: number;
-  icon: string;
+  icon?: string;
   title: string;
   listTypeDescription: string;
+  headerImage?: string;
 }
