@@ -3,21 +3,28 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Workspace } from '../../entities/workspace.entity';
-import { FindAllWorkspaceByAccountIdDto } from '../../modules/workspace/dto/find-all-workspace-by-account-id.dto';
+import { FindWorkspace } from './dto/find-workspace.dto';
+import { CacheService } from '../../utils/cache.service';
 
 @Injectable()
 export class WorkspaceRepository {
   constructor(
     @InjectRepository(Workspace)
     private readonly workspaceRepository: Repository<Workspace>,
+    private readonly cacheService: CacheService,
   ) {}
 
-  async findAllWorkspacesByAccountId(
-    accountId: number,
-  ): Promise<FindAllWorkspaceByAccountIdDto[]> {
-    const workspaces: FindAllWorkspaceByAccountIdDto[] =
-      await this.workspaceRepository.query(
-        `
+  async findAllByAccountId(accountId: number): Promise<FindWorkspace[]> {
+    const cacheKey = `workspaces:${accountId}`;
+    const cached = this.cacheService.get<FindWorkspace[]>(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    await this.workspaceRepository.query(`PRAGMA read_uncommitted = 1`);
+    const workspaces: FindWorkspace[] = await this.workspaceRepository.query(
+      `
         SELECT
           w.Id AS workspaceId,
           w.WorkspaceName AS workspaceName,
@@ -29,8 +36,11 @@ export class WorkspaceRepository {
         WHERE
           a.Id = ?
         `,
-        [accountId],
-      );
+      [accountId],
+    );
+
+    this.cacheService.set(cacheKey, workspaces);
+
     return workspaces;
   }
 }

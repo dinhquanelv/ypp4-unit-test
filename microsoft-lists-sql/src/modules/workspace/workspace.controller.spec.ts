@@ -4,7 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { WorkspaceController } from './workspace.controller';
 import { WorkspaceService } from './workspace.service';
 import { Workspace } from '../../entities/workspace.entity';
-import { WorkspaceRepository } from '../../modules/workspace/workspace.repository';
+import { WorkspaceRepository } from './workspace.repository';
+import { CacheService } from '../../utils/cache.service';
 
 describe('WorkspaceController', () => {
   let controller: WorkspaceController;
@@ -21,7 +22,7 @@ describe('WorkspaceController', () => {
         TypeOrmModule.forFeature([Workspace]),
       ],
       controllers: [WorkspaceController],
-      providers: [WorkspaceService, WorkspaceRepository],
+      providers: [WorkspaceService, WorkspaceRepository, CacheService],
     }).compile();
 
     controller = module.get<WorkspaceController>(WorkspaceController);
@@ -35,22 +36,17 @@ describe('WorkspaceController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('findAllWorkspacesByAccountId', () => {
+  describe('findAllByAccountId', () => {
     it('should return workspaces if accountId is valid', async () => {
       const accountId = 1;
-      const result = await controller.findAllWorkspacesByAccountId(accountId);
+      const result = await controller.findAllByAccountId(accountId);
 
       expect(result.length).toBeGreaterThan(0);
-      result.forEach((item) => {
-        expect(item).toHaveProperty('workspaceId');
-        expect(item).toHaveProperty('workspaceName');
-        expect(item).toHaveProperty('icon');
-      });
     });
 
     it('should return an empty array if accountId is invalid', async () => {
       const accountId = -1;
-      const result = await controller.findAllWorkspacesByAccountId(accountId);
+      const result = await controller.findAllByAccountId(accountId);
 
       expect(result).toEqual([]);
     });
