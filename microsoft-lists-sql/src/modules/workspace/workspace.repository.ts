@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Workspace } from '../../entities/workspace.entity';
-import { FindWorkspace } from './dto/find-workspace.dto';
+import { WorkspaceDto } from './dto/workspace.dto';
 import { CacheService } from '../../utils/cache.service';
 
 @Injectable()
@@ -14,16 +14,16 @@ export class WorkspaceRepository {
     private readonly cacheService: CacheService,
   ) {}
 
-  async findAllByAccountId(accountId: number): Promise<FindWorkspace[]> {
+  async findAllByAccountId(accountId: number): Promise<WorkspaceDto[]> {
     const cacheKey = `workspaces:${accountId}`;
-    const cached = this.cacheService.get<FindWorkspace[]>(cacheKey);
+    const cached = this.cacheService.get<WorkspaceDto[]>(cacheKey);
 
     if (cached) {
       return cached;
     }
 
     await this.workspaceRepository.query(`PRAGMA read_uncommitted = 1`);
-    const workspaces: FindWorkspace[] = await this.workspaceRepository.query(
+    const workspaces: WorkspaceDto[] = await this.workspaceRepository.query(
       `
         SELECT
           w.Id AS workspaceId,
