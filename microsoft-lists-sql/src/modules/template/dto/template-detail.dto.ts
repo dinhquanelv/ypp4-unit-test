@@ -1,5 +1,5 @@
-export class FindOneTemplateByIdDto {
-  templateId: number;
+export class TemplateDetailDto {
+  listTemplateId: number;
   icon: string;
   title: string;
   summary: string;
