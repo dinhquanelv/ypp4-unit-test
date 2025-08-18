@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { Workspace } from '../../entities/workspace.entity';
 import { WorkspaceDto } from './dto/workspace.dto';
-import { CacheService } from '../../utils/cache.service';
+import { CacheService } from '../../common/utils/cache.util';
 
 @Injectable()
 export class WorkspaceRepository {

@@ -5,7 +5,7 @@ import { TemplateController } from './template.controller';
 import { TemplateService } from './template.service';
 import { TemplateRepository } from './template.repository';
 import { ListTemplate } from '../../entities/list-template.entity';
-import { CacheService } from '../../utils/cache.service';
+import { CacheService } from '../../common/utils/cache.util';
 
 describe('TemplateController', () => {
   let controller: TemplateController;

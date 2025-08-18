@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { ListType } from '../../entities/list-type.entity';
 import { ListTypeDto } from './dto/list-type.dto';
-import { CacheService } from '../../utils/cache.service';
+import { CacheService } from '../../common/utils/cache.util';
 
 @Injectable()
 export class ListTypeRepository {
