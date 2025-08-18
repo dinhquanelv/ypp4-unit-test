@@ -1,27 +1,26 @@
 import { Injectable } from '@nestjs/common';
 
 import { ListViewRepository } from './list-view.repository';
-import { FindAllViewsByListIdDto } from './dto/find-all-views-by-list-id.dto';
-import { FindAllViewTypesDto } from './dto/find-all-view-types.dto';
-import { FindOneViewByIdDto } from './dto/find-one-view-by-id.dto';
+import { ViewDto } from './dto/view.dto';
+import { ViewTypeDto } from './dto/view-type.dto';
+import { ViewSettingDto } from './dto/view-setting.dto';
+import { ViewTypeEnum } from '../../common/enums/view-type.enum';
 
 @Injectable()
 export class ListViewService {
   constructor(private readonly listViewRepository: ListViewRepository) {}
 
-  async findAllViewsByListId(
-    listId: number,
-  ): Promise<FindAllViewsByListIdDto[]> {
-    return await this.listViewRepository.findAllViewsByListId(listId);
+  async findAllByListId(listId: number): Promise<ViewDto[]> {
+    return await this.listViewRepository.findAllByListId(listId);
   }
 
-  async findAllViewTypes(): Promise<FindAllViewTypesDto[]> {
-    return await this.listViewRepository.findAllViewTypes();
+  async findAllTypes(): Promise<ViewTypeDto[]> {
+    return await this.listViewRepository.findAllTypes();
   }
 
-  async findOneViewById(
-    listViewId: number,
-  ): Promise<FindOneViewByIdDto | null> {
-    return await this.listViewRepository.findOneViewById(listViewId);
+  async findAllSettingsByType(
+    typeName: ViewTypeEnum,
+  ): Promise<ViewSettingDto[]> {
+    return await this.listViewRepository.findAllSettingsByType(typeName);
   }
 }
