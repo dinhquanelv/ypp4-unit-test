@@ -4,8 +4,8 @@ import { Repository } from 'typeorm';
 
 import { TrashItem } from '../../entities/trash-item.entity';
 import { TrashItemDto } from './dto/trash-item.dto';
-import { SortOrder } from '../../common/enums/sort-order.enum';
-import { CacheService } from '../../utils/cache.service';
+import { SortOrderEnum } from '../../common/enums/sort-order.enum';
+import { CacheService } from '../../common/utils/cache.util';
 
 @Injectable()
 export class TrashItemRepository {
@@ -17,7 +17,7 @@ export class TrashItemRepository {
 
   async findAll(
     sortBy?: keyof TrashItemDto,
-    order?: SortOrder,
+    order?: SortOrderEnum,
   ): Promise<TrashItemDto[]> {
     const cacheKey = `trashItems:all${sortBy || 'default'}:${order}`;
     const cached = this.cacheService.get<TrashItemDto[]>(cacheKey);
