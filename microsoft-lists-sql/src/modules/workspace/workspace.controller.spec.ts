@@ -5,7 +5,7 @@ import { WorkspaceController } from './workspace.controller';
 import { WorkspaceService } from './workspace.service';
 import { Workspace } from '../../entities/workspace.entity';
 import { WorkspaceRepository } from './workspace.repository';
-import { CacheService } from '../../utils/cache.service';
+import { CacheService } from '../../common/utils/cache.util';
 
 describe('WorkspaceController', () => {
   let controller: WorkspaceController;

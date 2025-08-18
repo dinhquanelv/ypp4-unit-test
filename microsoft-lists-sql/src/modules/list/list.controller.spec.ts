@@ -5,7 +5,7 @@ import { ListController } from './list.controller';
 import { ListService } from './list.service';
 import { List } from '../../entities/list.entity';
 import { ListRepository } from './list.repository';
-import { CacheService } from '../../utils/cache.service';
+import { CacheService } from '../../common/utils/cache.util';
 
 describe('ListController', () => {
   let controller: ListController;

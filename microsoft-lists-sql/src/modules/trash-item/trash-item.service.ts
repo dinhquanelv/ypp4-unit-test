@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { TrashItemRepository } from './trash-item.repository';
 import { TrashItemDto } from './dto/trash-item.dto';
-import { SortOrder } from '../../common/enums/sort-order.enum';
+import { SortOrderEnum } from '../../common/enums/sort-order.enum';
 
 @Injectable()
 export class TrashItemService {
@@ -10,7 +10,7 @@ export class TrashItemService {
 
   async findAll(
     sortBy?: keyof TrashItemDto,
-    order?: SortOrder,
+    order?: SortOrderEnum,
   ): Promise<TrashItemDto[]> {
     return await this.trashItemRepository.findAll(sortBy, order);
   }

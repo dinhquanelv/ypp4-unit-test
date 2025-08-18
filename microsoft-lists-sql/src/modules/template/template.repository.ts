@@ -8,7 +8,7 @@ import { TemplateDetailDto } from './dto/template-detail.dto';
 import { ColumnDto } from './dto/column.dto';
 import { SampleCellValue } from './dto/sample-cell-value.dto';
 import { ViewDto } from './dto/view.dto';
-import { CacheService } from '../../utils/cache.service';
+import { CacheService } from '../../common/utils/cache.util';
 
 @Injectable()
 export class TemplateRepository {

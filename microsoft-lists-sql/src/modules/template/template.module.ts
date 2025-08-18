@@ -5,7 +5,7 @@ import { TemplateService } from './template.service';
 import { TemplateController } from './template.controller';
 import { ListTemplate } from '../../entities/list-template.entity';
 import { TemplateRepository } from './template.repository';
-import { CacheService } from '../../utils/cache.service';
+import { CacheService } from '../../common/utils/cache.util';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ListTemplate])],

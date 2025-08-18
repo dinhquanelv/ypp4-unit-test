@@ -1,27 +1,26 @@
 import { Controller } from '@nestjs/common';
 
 import { ListViewService } from './list-view.service';
-import { FindAllViewsByListIdDto } from './dto/find-all-views-by-list-id.dto';
-import { FindAllViewTypesDto } from './dto/find-all-view-types.dto';
-import { FindOneViewByIdDto } from './dto/find-one-view-by-id.dto';
+import { ViewDto } from './dto/view.dto';
+import { ViewTypeDto } from './dto/view-type.dto';
+import { ViewSettingDto } from './dto/view-setting.dto';
+import { ViewTypeEnum } from '../../common/enums/view-type.enum';
 
 @Controller('list-view')
 export class ListViewController {
   constructor(private readonly listViewService: ListViewService) {}
 
-  async findAllViewsByListId(
-    listId: number,
-  ): Promise<FindAllViewsByListIdDto[]> {
-    return await this.listViewService.findAllViewsByListId(listId);
+  async findAllByListId(listId: number): Promise<ViewDto[]> {
+    return await this.listViewService.findAllByListId(listId);
   }
 
-  async findAllViewTypes(): Promise<FindAllViewTypesDto[]> {
-    return await this.listViewService.findAllViewTypes();
+  async findAllTypes(): Promise<ViewTypeDto[]> {
+    return await this.listViewService.findAllTypes();
   }
 
-  async findOneViewById(
-    listViewId: number,
-  ): Promise<FindOneViewByIdDto | null> {
-    return await this.listViewService.findOneViewById(listViewId);
+  async findAllSettingsByType(
+    typeName: ViewTypeEnum,
+  ): Promise<ViewSettingDto[]> {
+    return await this.listViewService.findAllSettingsByType(typeName);
   }
 }
