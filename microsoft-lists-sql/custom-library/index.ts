@@ -40,6 +40,13 @@ export function Injectable(option?: { scope?: Scope }) {
   };
 }
 
+function getOrCreate<K, V>(map: Map<K, V>, key: K, create: () => V): V {
+  if (!map.has(key)) {
+    map.set(key, create());
+  }
+  return map.get(key)!;
+}
+
 const scopeResolvers = {
   [Scope.TRANSIENT]: <T>(
     target: Constructor<T>,
@@ -53,10 +60,9 @@ const scopeResolvers = {
     if (!requestContext) {
       throw new Error(`No request context provided for ${target.name}`);
     }
-    if (!requestContext.has(target)) {
-      requestContext.set(target, createInstance(target, requestContext));
-    }
-    return requestContext.get(target) as T;
+    return getOrCreate(requestContext, target, () =>
+      createInstance(target, requestContext),
+    ) as T;
   },
 
   [Scope.SINGLETON]: <T>(
@@ -77,9 +83,7 @@ export function resolve<T>(
 ): T {
   const record = providerRegister.get(target);
   if (!record) {
-    throw new Error(
-      `No provider registered for ${target.name}. Did you forget to add @Injectable() decorator?`,
-    );
+    throw new Error(`No provider registered for ${target.name}`);
   }
 
   const resolver = scopeResolvers[record.scope];
@@ -107,16 +111,17 @@ function createInstance<T>(
 }
 
 export class Container {
-  private static requestContexts = new WeakMap<any, Map<Constructor, any>>();
+  private static requestContexts = new Map<any, Map<Constructor, any>>();
 
   static get<T>(target: Constructor<T>, requestId?: any): T {
     let requestContext: Map<Constructor, any> | undefined;
 
     if (requestId) {
-      if (!this.requestContexts.has(requestId)) {
-        this.requestContexts.set(requestId, new Map());
-      }
-      requestContext = this.requestContexts.get(requestId);
+      requestContext = getOrCreate(
+        this.requestContexts,
+        requestId,
+        () => new Map(),
+      );
     }
 
     return resolve(target, requestContext);
