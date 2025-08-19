@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm/repository/Repository';
 
 import { Account } from '../../entities/account.entity';
 import { AccountDto } from './dto/account.dto';
 import { CacheService } from '../../common/utils/cache.util';
+import { Injectable } from '../../../custom-library';
 
 @Injectable()
 export class AccountRepository {
