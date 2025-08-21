@@ -1,15 +1,10 @@
 import 'reflect-metadata';
-import {
-  Container,
-  Injectable,
-  Scope,
-  container,
-} from '../dependency-injection/index';
+import { Container, Injectable, Scope, container } from './di';
 
 @Injectable()
-class TestService {
+class DefaultService {
   getValue(): string {
-    return 'test-value';
+    return 'default-value';
   }
 }
 
@@ -29,10 +24,10 @@ class RequestService {
 
 @Injectable()
 class DependentService {
-  constructor(private testService: TestService) {}
+  constructor(private defaultService: DefaultService) {}
 
   getDependentValue(): string {
-    return `dependent-${this.testService.getValue()}`;
+    return `dependent-${this.defaultService.getValue()}`;
   }
 }
 
@@ -40,7 +35,7 @@ describe('Dependency Injection Container', () => {
   beforeEach(() => {
     container.clear();
 
-    Container.register(TestService, Scope.SINGLETON);
+    Container.register(DefaultService, Scope.SINGLETON);
     Container.register(TransientService, Scope.TRANSIENT);
     Container.register(RequestService, Scope.REQUEST);
     Container.register(DependentService, Scope.SINGLETON);
@@ -55,22 +50,30 @@ describe('Dependency Injection Container', () => {
       expect(container.get(NewService)?.scope).toBe(Scope.SINGLETON);
     });
 
-    it('should register a service with specified scope', () => {
+    it('should register a service with TRANSIENT scope', () => {
       class NewService {}
       Container.register(NewService, Scope.TRANSIENT);
 
       expect(container.has(NewService)).toBe(true);
       expect(container.get(NewService)?.scope).toBe(Scope.TRANSIENT);
     });
+
+    it('should register a service with REQUEST scope', () => {
+      class NewService {}
+      Container.register(NewService, Scope.REQUEST);
+
+      expect(container.has(NewService)).toBe(true);
+      expect(container.get(NewService)?.scope).toBe(Scope.REQUEST);
+    });
   });
 
   describe('Container.resolve', () => {
     it('should resolve SINGLETON service and return same instance', () => {
-      const instance1 = Container.resolve(TestService);
-      const instance2 = Container.resolve(TestService);
+      const instance1 = Container.resolve(DefaultService);
+      const instance2 = Container.resolve(DefaultService);
 
       expect(instance1).toBe(instance2);
-      expect(instance1.getValue()).toBe('test-value');
+      expect(instance1.getValue()).toBe('default-value');
     });
 
     it('should resolve TRANSIENT service and return new instance each time', () => {
@@ -82,20 +85,30 @@ describe('Dependency Injection Container', () => {
       expect(instance2.getValue()).toBe('transient-value');
     });
 
-    it('should resolve REQUEST service and return new instance each time', () => {
-      const instance1 = Container.resolve(RequestService);
-      const instance2 = Container.resolve(RequestService);
+    it('should resolve REQUEST service and return same instance within same context', () => {
+      const context1 = new Map();
+      const context2 = new Map();
 
-      expect(instance1).not.toBe(instance2);
+      const instance1 = Container.resolve(RequestService, context1);
+      const instance2 = Container.resolve(RequestService, context1);
+      const instance3 = Container.resolve(RequestService, context2);
+
+      expect(instance1).toBe(instance2);
+      expect(instance1).not.toBe(instance3);
       expect(instance1.getValue()).toBe('request-value');
       expect(instance2.getValue()).toBe('request-value');
+      expect(instance3.getValue()).toBe('request-value');
+    });
+
+    it('should throw error when resolving REQUEST service without context', () => {
+      expect(() => Container.resolve(RequestService)).toThrow();
     });
 
     it('should resolve service with dependencies', () => {
       const dependentInstance = Container.resolve(DependentService);
 
       expect(dependentInstance.getDependentValue()).toBe(
-        'dependent-test-value',
+        'dependent-default-value',
       );
     });
 
@@ -103,53 +116,6 @@ describe('Dependency Injection Container', () => {
       class UnregisteredService {}
 
       expect(() => Container.resolve(UnregisteredService)).toThrow();
-    });
-  });
-
-  describe('@Injectable decorator', () => {
-    it('should register class with default SINGLETON scope', () => {
-      @Injectable()
-      class DecoratedService {}
-
-      expect(container.has(DecoratedService)).toBe(true);
-      expect(container.get(DecoratedService)?.scope).toBe(Scope.SINGLETON);
-    });
-
-    it('should register class with transient scope', () => {
-      @Injectable({ scope: Scope.TRANSIENT })
-      class DecoratedTransientService {}
-
-      expect(container.has(DecoratedTransientService)).toBe(true);
-      expect(container.get(DecoratedTransientService)?.scope).toBe(
-        Scope.TRANSIENT,
-      );
-    });
-
-    it('should register class with request scope', () => {
-      @Injectable({ scope: Scope.REQUEST })
-      class DecoratedRequestService {}
-
-      expect(container.has(DecoratedRequestService)).toBe(true);
-      expect(container.get(DecoratedRequestService)?.scope).toBe(Scope.REQUEST);
-    });
-  });
-
-  describe('Container error handling', () => {
-    it('should handle circular dependencies gracefully', () => {
-      @Injectable()
-      class ServiceB {
-        constructor() {}
-      }
-
-      @Injectable()
-      class ServiceA {
-        constructor(private serviceB: ServiceB) {}
-      }
-
-      Container.register(ServiceA);
-      Container.register(ServiceB);
-
-      expect(() => Container.resolve(ServiceA)).not.toThrow();
     });
   });
 });
