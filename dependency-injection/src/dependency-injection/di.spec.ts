@@ -1,10 +1,5 @@
 import 'reflect-metadata';
-import {
-  Container,
-  Injectable,
-  Scope,
-  container,
-} from '../dependency-injection/index';
+import { Container, Injectable, Scope, container } from './di';
 
 @Injectable()
 class TestService {
