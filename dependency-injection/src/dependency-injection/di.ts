@@ -20,7 +20,7 @@ export class Container {
     void (container.get(provider) ?? container.set(provider, { scope }));
   }
 
-  static resolve<T>(provider: Newable<T>): T {
+  static resolve<T>(provider: Newable<T>, context?: Map<Newable, any>): T {
     const metadata = container.get(provider);
     if (!metadata) {
       throw new Error(`Class ${provider.name} is not registered`);
@@ -40,7 +40,17 @@ export class Container {
         return instance as T;
       },
       [Scope.TRANSIENT]: () => Container.createInstance(provider),
-      [Scope.REQUEST]: () => Container.createInstance(provider),
+      [Scope.REQUEST]: () => {
+        if (!context) {
+          throw new Error('Context is required');
+        }
+
+        return (
+          (context.get(provider) as T) ??
+          ((context.set(provider, Container.createInstance(provider)) &&
+            context.get(provider)) as T)
+        );
+      },
     };
 
     return scopeHandler[scope]();
