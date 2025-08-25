@@ -6,21 +6,21 @@ export enum Scope {
   REQUEST = 'REQUEST',
 }
 
-export type Newable<T = unknown> = new (...args: unknown[]) => T;
+export type ClassType<T = unknown> = new (...args: unknown[]) => T;
 
 export interface ProviderInfo<T = unknown> {
   instance?: T;
   scope: Scope;
 }
 
-export const container = new Map<Newable, ProviderInfo>();
+export const container = new Map<ClassType, ProviderInfo>();
 
 export class Container {
-  static register(provider: Newable, scope: Scope = Scope.SINGLETON): void {
+  static register(provider: ClassType, scope: Scope = Scope.SINGLETON): void {
     void (container.get(provider) ?? container.set(provider, { scope }));
   }
 
-  static resolve<T>(provider: Newable<T>, context?: Map<Newable, any>): T {
+  static resolve<T>(provider: ClassType<T>, context?: Map<ClassType, any>): T {
     const metadata = container.get(provider);
     if (!metadata) {
       throw new Error(`Class ${provider.name} is not registered`);
@@ -56,13 +56,13 @@ export class Container {
     return scopeHandler[scope]();
   }
 
-  private static createInstance<T>(provider: Newable<T>): T {
+  private static createInstance<T>(provider: ClassType<T>): T {
     const metadata =
       (Reflect.getMetadata('design:paramtypes', provider) as
-        | Newable[]
+        | ClassType[]
         | undefined) || [];
 
-    const constructorDeps: Newable[] = metadata;
+    const constructorDeps: ClassType[] = metadata;
 
     const resolvedDeps = constructorDeps.map((dep) => {
       return Container.resolve(dep);
@@ -75,7 +75,7 @@ export class Container {
 }
 
 export function Injectable(option?: { scope?: Scope }) {
-  return function (provider: Newable) {
+  return function (provider: ClassType) {
     const scope = option?.scope || Scope.SINGLETON;
 
     Container.register(provider, scope);
