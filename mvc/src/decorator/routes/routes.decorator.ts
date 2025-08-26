@@ -11,11 +11,11 @@ export const createRouteDecorator =
         | undefined) ?? [];
 
     // format path. ex: user -> /user | /user -> /user | //user -> /user
-    const finalPath = path.replace(/^\/?/, '/');
+    const formatPath = path.replace(/^\/?/, '/');
 
     routes.push({
       method,
-      path: finalPath,
+      path: formatPath,
       handler: propertyKey,
     });
 

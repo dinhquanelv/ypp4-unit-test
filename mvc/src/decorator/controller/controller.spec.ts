@@ -1,5 +1,5 @@
 import { RouteMetadata } from '../../types';
-import { Controller } from './index';
+import { Controller } from './controller.decorator';
 
 @Controller('users')
 class UserController {}

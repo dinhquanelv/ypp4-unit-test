@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Container, Injectable, container } from './di';
+import { Container, Injectable, container } from './di.decorator';
 import { Scope } from '../../enum';
 
 @Injectable()

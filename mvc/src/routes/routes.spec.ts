@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { setGlobalPrefix } from '../core/global-prefix';
-import { Controller } from '../decorator/controller';
-import { Delete, Get, Patch, Post } from '../decorator/routes';
+import { Controller } from '../decorator/controller/controller.decorator';
+import { Delete, Get, Patch, Post } from '../decorator/routes/routes.decorator';
 import { RouteMetadata } from '../types';
 import { compileRoutes } from './index';
 
@@ -41,11 +41,11 @@ export class UserController {
 }
 
 describe('Routes', () => {
-  it('should return metadata of fullRoutes', () => {
+  it('should return metadata of finalPath', () => {
     compileRoutes(UserController);
 
     const metadata: RouteMetadata[] = Reflect.getMetadata(
-      'fullRoutes',
+      'finalPath',
       UserController,
     ) as RouteMetadata[];
 
