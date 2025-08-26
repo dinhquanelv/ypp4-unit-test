@@ -4,6 +4,7 @@ import { Controller } from '../decorator/controller/controller.decorator';
 import { Delete, Get, Patch, Post } from '../decorator/routes/routes.decorator';
 import { RouteMetadata } from '../common/types';
 import { compileRoutes } from './index';
+import { FINAL_PATH_METADATA } from '../common/constants';
 
 setGlobalPrefix('api');
 
@@ -41,11 +42,13 @@ export class UserController {
 }
 
 describe('Routes', () => {
-  it('should return metadata of finalPath', () => {
+  beforeEach(() => {
     compileRoutes(UserController);
+  });
 
+  it('should return metadata of finalPath', () => {
     const metadata: RouteMetadata[] = Reflect.getMetadata(
-      'finalPath',
+      FINAL_PATH_METADATA,
       UserController,
     ) as RouteMetadata[];
 

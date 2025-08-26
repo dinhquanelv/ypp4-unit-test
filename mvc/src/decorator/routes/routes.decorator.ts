@@ -1,12 +1,13 @@
 import { RouteMetadata } from '../../common/types';
 import { httpMethod } from '../../common/enums';
+import { ROUTES_METADATA } from '../../common/constants';
 
 export const createRouteDecorator =
   (method: string) =>
   (path: string = '') =>
   (target: object, propertyKey: string) => {
     const routes: RouteMetadata[] =
-      (Reflect.getMetadata('routes', target.constructor) as
+      (Reflect.getMetadata(ROUTES_METADATA, target.constructor) as
         | RouteMetadata[]
         | undefined) ?? [];
 
@@ -19,7 +20,7 @@ export const createRouteDecorator =
       handler: propertyKey,
     });
 
-    Reflect.defineMetadata('routes', routes, target.constructor);
+    Reflect.defineMetadata(ROUTES_METADATA, routes, target.constructor);
   };
 
 export const Route = {

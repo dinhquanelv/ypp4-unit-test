@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { ClassType } from '../../common/types';
 import { Scope } from '../../common/enums';
+import { DESIGN_PARAMTYPES_METADATA } from '../../common/constants';
 
 export interface ProviderInfo<T = unknown> {
   instance?: T;
@@ -52,7 +53,7 @@ export class Container {
 
   private static createInstance<T>(provider: ClassType<T>): T {
     const metadata =
-      (Reflect.getMetadata('design:paramtypes', provider) as
+      (Reflect.getMetadata(DESIGN_PARAMTYPES_METADATA, provider) as
         | ClassType[]
         | undefined) || [];
 
