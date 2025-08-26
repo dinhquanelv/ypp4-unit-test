@@ -1,12 +1,12 @@
 import { Delete, Get, Patch, Post, RouteMetadata } from './index';
 
 class TestController {
-  @Post('')
+  @Post()
   create() {
     return 'create something';
   }
 
-  @Get('')
+  @Get()
   findAll() {
     return 'find all something';
   }

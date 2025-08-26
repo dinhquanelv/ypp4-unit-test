@@ -23,6 +23,7 @@ export const createRouteDecorator =
         | RouteMetadata[]
         | undefined) ?? [];
 
+    // user -> /user | /user -> /user | //user -> /user
     const finalPath = path.replace(/^\/?/, '/');
 
     routes.push({
