@@ -1,19 +1,5 @@
-import 'reflect-metadata';
-import { ClassType } from '../types';
-
-export interface RouteMetadata {
-  method: string;
-  path: string;
-  handler: string;
-}
-
-export enum httpMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  PATCH = 'PATCH',
-  DELETE = 'DELETE',
-}
+import { RouteMetadata } from '../../types';
+import { httpMethod } from '../../enum';
 
 export const createRouteDecorator =
   (method: string) =>
@@ -45,10 +31,3 @@ export const Route = {
 };
 
 export const { Get, Post, Put, Patch, Delete } = Route;
-
-export const Controller = (prefix: string) => (target: ClassType) => {
-  // format path. ex: user -> /user | /user -> /user | //user -> /user
-  const finalPrefix = prefix.replace(/^\/?/, '/');
-
-  Reflect.defineMetadata('prefix', finalPrefix, target);
-};
