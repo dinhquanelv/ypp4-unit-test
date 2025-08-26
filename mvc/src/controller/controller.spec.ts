@@ -1,29 +1,30 @@
-import { Delete, Get, Patch, Post, RouteMetadata } from './index';
+import { Controller, Delete, Get, Patch, Post, RouteMetadata } from './index';
 
-class TestController {
+@Controller('users')
+class UserController {
   @Post()
   create() {
-    return 'create something';
+    return 'create user';
   }
 
   @Get()
   findAll() {
-    return 'find all something';
+    return 'find all user';
   }
 
   @Get(':id')
   findOne() {
-    return 'find one something';
+    return 'find one user';
   }
 
   @Patch(':id')
   update() {
-    return 'update something';
+    return 'update user';
   }
 
   @Delete(':id')
   remove() {
-    return 'remove something';
+    return 'remove user';
   }
 }
 
@@ -31,7 +32,7 @@ describe('Route Decorators', () => {
   it('should return metadata of routes', () => {
     const metadata: RouteMetadata[] = Reflect.getMetadata(
       'routes',
-      TestController,
+      UserController,
     ) as RouteMetadata[];
 
     expect(metadata).toEqual([
@@ -41,5 +42,16 @@ describe('Route Decorators', () => {
       { method: 'PATCH', path: '/:id', handler: 'update' },
       { method: 'DELETE', path: '/:id', handler: 'remove' },
     ]);
+  });
+});
+
+describe('Controller Decorator', () => {
+  it('should return metadata of prefix', () => {
+    const metadata: RouteMetadata[] = Reflect.getMetadata(
+      'prefix',
+      UserController,
+    ) as RouteMetadata[];
+
+    expect(metadata).toEqual('/users');
   });
 });

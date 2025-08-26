@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { ClassType } from '../types';
 
 export interface RouteMetadata {
   method: string;
@@ -23,7 +24,7 @@ export const createRouteDecorator =
         | RouteMetadata[]
         | undefined) ?? [];
 
-    // user -> /user | /user -> /user | //user -> /user
+    // format path. ex: user -> /user | /user -> /user | //user -> /user
     const finalPath = path.replace(/^\/?/, '/');
 
     routes.push({
@@ -44,3 +45,10 @@ export const Route = {
 };
 
 export const { Get, Post, Put, Patch, Delete } = Route;
+
+export const Controller = (prefix: string) => (target: ClassType) => {
+  // format path. ex: user -> /user | /user -> /user | //user -> /user
+  const finalPrefix = prefix.replace(/^\/?/, '/');
+
+  Reflect.defineMetadata('prefix', finalPrefix, target);
+};
