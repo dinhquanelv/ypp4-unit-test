@@ -1,4 +1,4 @@
-import { RouteMetadata } from '../../types';
+import { RouteMetadata } from '../../common/types';
 import { Controller } from './controller.decorator';
 
 @Controller('users')

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { RouteMetadata } from '../../types';
+import { RouteMetadata } from '../../common/types';
 import { Delete, Get, Patch, Post } from './routes.decorator';
 
 class UserController {

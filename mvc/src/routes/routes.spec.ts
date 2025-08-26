@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { setGlobalPrefix } from '../core/global-prefix';
 import { Controller } from '../decorator/controller/controller.decorator';
 import { Delete, Get, Patch, Post } from '../decorator/routes/routes.decorator';
-import { RouteMetadata } from '../types';
+import { RouteMetadata } from '../common/types';
 import { compileRoutes } from './index';
 
 setGlobalPrefix('api');

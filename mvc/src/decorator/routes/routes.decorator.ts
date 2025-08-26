@@ -1,5 +1,5 @@
-import { RouteMetadata } from '../../types';
-import { httpMethod } from '../../enum';
+import { RouteMetadata } from '../../common/types';
+import { httpMethod } from '../../common/enums';
 
 export const createRouteDecorator =
   (method: string) =>
