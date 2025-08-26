@@ -11,3 +11,9 @@ export enum httpMethod {
   PATCH = 'PATCH',
   DELETE = 'DELETE',
 }
+
+export enum ParamType {
+  Param = 'param',
+  Query = 'query',
+  Body = 'body',
+}
