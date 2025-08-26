@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { RouteMetadata } from '../../types';
-import { Delete, Get, Patch, Post } from './routes.decorator';
+import { Delete, Get, Patch, Post } from './index';
 
 class UserController {
   @Post()
