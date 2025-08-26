@@ -1,12 +1,6 @@
 import 'reflect-metadata';
-
-export enum Scope {
-  SINGLETON = 'SINGLETON',
-  TRANSIENT = 'TRANSIENT',
-  REQUEST = 'REQUEST',
-}
-
-export type ClassType<T = unknown> = new (...args: unknown[]) => T;
+import { ClassType } from '../../types';
+import { Scope } from '../../enum';
 
 export interface ProviderInfo<T = unknown> {
   instance?: T;

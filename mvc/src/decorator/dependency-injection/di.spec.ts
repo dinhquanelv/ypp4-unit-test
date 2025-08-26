@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import { Container, Injectable, Scope, container } from './di';
+import { Container, Injectable, container } from './di';
+import { Scope } from '../../enum';
 
 @Injectable()
 class DefaultService {

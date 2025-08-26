@@ -1,29 +1,31 @@
-import { Delete, Get, Patch, Post, RouteMetadata } from './index';
+import 'reflect-metadata';
+import { RouteMetadata } from '../../types';
+import { Delete, Get, Patch, Post } from './routes.decorator';
 
-class TestController {
-  @Post('')
+class UserController {
+  @Post()
   create() {
-    return 'create something';
+    return 'create user';
   }
 
-  @Get('')
+  @Get()
   findAll() {
-    return 'find all something';
+    return 'find all user';
   }
 
   @Get(':id')
   findOne() {
-    return 'find one something';
+    return 'find one user';
   }
 
   @Patch(':id')
   update() {
-    return 'update something';
+    return 'update user';
   }
 
   @Delete(':id')
   remove() {
-    return 'remove something';
+    return 'remove user';
   }
 }
 
@@ -31,7 +33,7 @@ describe('Route Decorators', () => {
   it('should return metadata of routes', () => {
     const metadata: RouteMetadata[] = Reflect.getMetadata(
       'routes',
-      TestController,
+      UserController,
     ) as RouteMetadata[];
 
     expect(metadata).toEqual([

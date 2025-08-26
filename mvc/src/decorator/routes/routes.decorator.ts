@@ -1,18 +1,5 @@
-import 'reflect-metadata';
-
-export interface RouteMetadata {
-  method: string;
-  path: string;
-  handler: string;
-}
-
-export enum httpMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  PATCH = 'PATCH',
-  DELETE = 'DELETE',
-}
+import { RouteMetadata } from '../../types';
+import { httpMethod } from '../../enum';
 
 export const createRouteDecorator =
   (method: string) =>
@@ -23,6 +10,7 @@ export const createRouteDecorator =
         | RouteMetadata[]
         | undefined) ?? [];
 
+    // format path. ex: user -> /user | /user -> /user | //user -> /user
     const finalPath = path.replace(/^\/?/, '/');
 
     routes.push({
