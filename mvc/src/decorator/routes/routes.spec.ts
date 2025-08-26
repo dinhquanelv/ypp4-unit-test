@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { RouteMetadata } from '../../common/types';
 import { Delete, Get, Patch, Post } from './routes.decorator';
+import { ROUTES_METADATA } from '../../common/constants';
 
 class UserController {
   @Post()
@@ -32,7 +33,7 @@ class UserController {
 describe('Route Decorators', () => {
   it('should return metadata of routes', () => {
     const metadata: RouteMetadata[] = Reflect.getMetadata(
-      'routes',
+      ROUTES_METADATA,
       UserController,
     ) as RouteMetadata[];
 

@@ -1,12 +1,20 @@
 import { getGlobalPrefix } from '../core/global-prefix';
 import { ClassType, RouteMetadata } from '../common/types';
+import {
+  FINAL_PATH_METADATA,
+  PREFIX_METADATA,
+  ROUTES_METADATA,
+} from '../common/constants';
 
 export const compileRoutes = (target: ClassType) => {
   const routes: RouteMetadata[] = Reflect.getMetadata(
-    'routes',
+    ROUTES_METADATA,
     target,
   ) as RouteMetadata[];
-  const controllerPrefix = Reflect.getMetadata('prefix', target) as string;
+  const controllerPrefix = Reflect.getMetadata(
+    PREFIX_METADATA,
+    target,
+  ) as string;
 
   const finalPath = routes.map((route) => ({
     ...route,
@@ -16,7 +24,7 @@ export const compileRoutes = (target: ClassType) => {
     ),
   }));
 
-  Reflect.defineMetadata('finalPath', finalPath, target);
+  Reflect.defineMetadata(FINAL_PATH_METADATA, finalPath, target);
 
   return finalPath;
 };
