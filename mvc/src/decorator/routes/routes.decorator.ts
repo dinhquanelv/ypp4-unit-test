@@ -1,5 +1,5 @@
-import { RouteMetadata } from '../../types';
-import { httpMethod } from '../../enum';
+import { RouteMetadata } from '../../common/types';
+import { httpMethod } from '../../common/enums';
 
 export const createRouteDecorator =
   (method: string) =>
@@ -11,11 +11,11 @@ export const createRouteDecorator =
         | undefined) ?? [];
 
     // format path. ex: user -> /user | /user -> /user | //user -> /user
-    const finalPath = path.replace(/^\/?/, '/');
+    const formatPath = path.replace(/^\/?/, '/');
 
     routes.push({
       method,
-      path: finalPath,
+      path: formatPath,
       handler: propertyKey,
     });
 

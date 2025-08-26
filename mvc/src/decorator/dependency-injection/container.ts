@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { ClassType } from '../../types';
-import { Scope } from '../../enum';
+import { ClassType } from '../../common/types';
+import { Scope } from '../../common/enums';
 
 export interface ProviderInfo<T = unknown> {
   instance?: T;
@@ -66,12 +66,4 @@ export class Container {
 
     return instance;
   }
-}
-
-export function Injectable(option?: { scope?: Scope }) {
-  return function (provider: ClassType) {
-    const scope = option?.scope || Scope.SINGLETON;
-
-    Container.register(provider, scope);
-  };
 }
