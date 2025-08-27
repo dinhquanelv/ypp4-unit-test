@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { PARAM_METADATA_KEY } from '../../common/constants';
 import { ParamType } from '../../common/enums';
-import { ParamMetadata } from '../../common/types';
+import { ParameterDecorator, ParamMetadata } from '../../common/types';
 
 export const createParameterDecorator =
   (type: ParamType) =>
@@ -11,13 +11,21 @@ export const createParameterDecorator =
       (Reflect.getMetadata(
         PARAM_METADATA_KEY,
         target,
-        propertyKey!,
+        propertyKey,
       ) as ParamMetadata[]) || [];
 
     metadata.push({ type, key, index: parameterIndex });
 
-    Reflect.defineMetadata(PARAM_METADATA_KEY, metadata, target, propertyKey!);
+    Reflect.defineMetadata(PARAM_METADATA_KEY, metadata, target, propertyKey);
   };
+
+export const getParameterMetadata = (target: object, propertyKey: string) => {
+  return Reflect.getMetadata(
+    PARAM_METADATA_KEY,
+    target,
+    propertyKey,
+  ) as ParamMetadata[];
+};
 
 export const Param = createParameterDecorator(ParamType.Param);
 export const Query = createParameterDecorator(ParamType.Query);

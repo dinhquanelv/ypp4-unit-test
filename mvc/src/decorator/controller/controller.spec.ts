@@ -1,16 +1,11 @@
-import { PREFIX_METADATA } from '../../common/constants';
-import { RouteMetadata } from '../../common/types';
-import { Controller } from './controller.decorator';
+import { Controller, getControllerMetadata } from './controller.decorator';
 
 @Controller('users')
 class UserController {}
 
 describe('Controller Decorator', () => {
-  it('should return metadata of prefix', () => {
-    const metadata: RouteMetadata[] = Reflect.getMetadata(
-      PREFIX_METADATA,
-      UserController,
-    ) as RouteMetadata[];
+  it('should return controller metadata', () => {
+    const metadata: string = getControllerMetadata(UserController);
 
     expect(metadata).toEqual('/users');
   });

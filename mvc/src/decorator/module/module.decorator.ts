@@ -6,3 +6,7 @@ export const Module =
   (moduleMetadata: ModuleMetadata) => (target: ClassType) => {
     Reflect.defineMetadata(MODULE_METADATA, moduleMetadata, target);
   };
+
+export const getModuleMetadata = (target: ClassType) => {
+  return Reflect.getMetadata(MODULE_METADATA, target) as ModuleMetadata;
+};
