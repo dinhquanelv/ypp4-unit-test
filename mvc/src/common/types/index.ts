@@ -19,3 +19,10 @@ export interface ParamMetadata {
   key?: string;
   index: number;
 }
+
+export interface ModuleMetadata {
+  imports?: ClassType[];
+  controllers?: ClassType[];
+  providers?: ClassType[];
+  exports?: ClassType[];
+}

@@ -1,10 +1,15 @@
 import 'reflect-metadata';
-import { setGlobalPrefix } from '../core/global-prefix';
-import { Controller } from '../decorator/controller/controller.decorator';
-import { Delete, Get, Patch, Post } from '../decorator/routes/routes.decorator';
-import { RouteMetadata } from '../common/types';
+import { setGlobalPrefix } from '../../core/global-prefix';
+import { Controller } from '../../decorator/controller/controller.decorator';
+import {
+  Delete,
+  Get,
+  Patch,
+  Post,
+} from '../../decorator/routes/routes.decorator';
+import { RouteMetadata } from '../../common/types';
 import { compileRoutes } from './index';
-import { FINAL_PATH_METADATA } from '../common/constants';
+import { FINAL_PATH_METADATA } from '../../common/constants';
 
 setGlobalPrefix('api');
 
