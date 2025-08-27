@@ -8,3 +8,7 @@ export const Controller = (prefix?: string) => (target: ClassType) => {
 
   Reflect.defineMetadata(PREFIX_METADATA, formatPrefix, target);
 };
+
+export const getControllerMetadata = (target: ClassType) => {
+  return Reflect.getMetadata(PREFIX_METADATA, target) as string;
+};

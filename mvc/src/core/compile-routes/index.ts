@@ -1,4 +1,4 @@
-import { getGlobalPrefix } from '../../core/global-prefix';
+import { getGlobalPrefix } from '../global-prefix';
 import { ClassType, RouteMetadata } from '../../common/types';
 import {
   FINAL_PATH_METADATA,

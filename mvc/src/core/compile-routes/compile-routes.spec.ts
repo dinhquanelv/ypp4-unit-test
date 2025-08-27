@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { setGlobalPrefix } from '../../core/global-prefix';
+import { setGlobalPrefix } from '../global-prefix';
 import { Controller } from '../../decorator/controller/controller.decorator';
 import {
   Delete,

@@ -1,7 +1,11 @@
 import 'reflect-metadata';
 import { ParamMetadata } from '../../common/types';
-import { PARAM_METADATA_KEY } from '../../common/constants';
-import { Body, Param, Query } from './parameter.decorator';
+import {
+  Body,
+  getParameterMetadata,
+  Param,
+  Query,
+} from './parameter.decorator';
 import { ParamType } from '../../common/enums';
 
 class ParameterController {
@@ -16,11 +20,10 @@ class ParameterController {
 
 describe('ParameterController', () => {
   it('should return parameter metadata', () => {
-    const metadata: ParamMetadata[] = Reflect.getMetadata(
-      PARAM_METADATA_KEY,
+    const metadata: ParamMetadata[] = getParameterMetadata(
       ParameterController.prototype,
       'testParameterFunc',
-    ) as ParamMetadata[];
+    );
 
     expect(metadata).toEqual([
       { type: ParamType.Query, key: 'age', index: 2 },
