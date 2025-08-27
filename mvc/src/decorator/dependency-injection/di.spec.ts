@@ -1,6 +1,8 @@
 import 'reflect-metadata';
 import { Container, Injectable, container } from './di.decorator';
 import { Scope } from '../../common/enums';
+import { DESIGN_PARAMTYPES_METADATA } from '../../common/constants';
+import { ClassType } from '../../common/types';
 
 @Injectable()
 class DefaultService {
@@ -33,38 +35,20 @@ class DependentService {
 }
 
 describe('Dependency Injection Container', () => {
-  beforeEach(() => {
-    container.clear();
-
-    Container.register(DefaultService, Scope.SINGLETON);
-    Container.register(TransientService, Scope.TRANSIENT);
-    Container.register(RequestService, Scope.REQUEST);
-    Container.register(DependentService, Scope.SINGLETON);
-  });
-
   describe('Container.register', () => {
     it('should register a service with default SINGLETON scope', () => {
-      class NewService {}
-      Container.register(NewService);
-
-      expect(container.has(NewService)).toBe(true);
-      expect(container.get(NewService)?.scope).toBe(Scope.SINGLETON);
+      expect(container.has(DefaultService)).toBe(true);
+      expect(container.get(DefaultService)?.scope).toBe(Scope.SINGLETON);
     });
 
     it('should register a service with TRANSIENT scope', () => {
-      class NewService {}
-      Container.register(NewService, Scope.TRANSIENT);
-
-      expect(container.has(NewService)).toBe(true);
-      expect(container.get(NewService)?.scope).toBe(Scope.TRANSIENT);
+      expect(container.has(TransientService)).toBe(true);
+      expect(container.get(TransientService)?.scope).toBe(Scope.TRANSIENT);
     });
 
     it('should register a service with REQUEST scope', () => {
-      class NewService {}
-      Container.register(NewService, Scope.REQUEST);
-
-      expect(container.has(NewService)).toBe(true);
-      expect(container.get(NewService)?.scope).toBe(Scope.REQUEST);
+      expect(container.has(RequestService)).toBe(true);
+      expect(container.get(RequestService)?.scope).toBe(Scope.REQUEST);
     });
   });
 
@@ -117,6 +101,18 @@ describe('Dependency Injection Container', () => {
       class UnregisteredService {}
 
       expect(() => Container.resolve(UnregisteredService)).toThrow();
+    });
+  });
+
+  describe('Injectable decorator', () => {
+    it('should mark a class as injectable', () => {
+      const metadata: ClassType[] = Reflect.getMetadata(
+        DESIGN_PARAMTYPES_METADATA,
+        DependentService,
+      ) as ClassType[];
+
+      expect(metadata).toBeDefined();
+      expect(metadata).toEqual([DefaultService]);
     });
   });
 });
