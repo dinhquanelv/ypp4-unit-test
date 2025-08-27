@@ -1,10 +1,10 @@
-import { getGlobalPrefix } from '../core/global-prefix';
-import { ClassType, RouteMetadata } from '../common/types';
+import { getGlobalPrefix } from '../../core/global-prefix';
+import { ClassType, RouteMetadata } from '../../common/types';
 import {
   FINAL_PATH_METADATA,
   PREFIX_METADATA,
   ROUTES_METADATA,
-} from '../common/constants';
+} from '../../common/constants';
 
 export const compileRoutes = (target: ClassType) => {
   const routes: RouteMetadata[] = Reflect.getMetadata(
