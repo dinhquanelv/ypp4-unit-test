@@ -23,6 +23,10 @@ export const createRouteDecorator =
     Reflect.defineMetadata(ROUTES_METADATA, routes, target.constructor);
   };
 
+export const getRoutesMetadata = (target: object) => {
+  return Reflect.getMetadata(ROUTES_METADATA, target) as RouteMetadata[];
+};
+
 export const Route = {
   Get: createRouteDecorator(httpMethod.GET),
   Post: createRouteDecorator(httpMethod.POST),

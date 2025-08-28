@@ -1,4 +1,4 @@
-import { Injectable } from './decorator/dependency-injection/di.decorator';
+import { Injectable } from './core/di/di.decorator';
 
 @Injectable()
 export class AppService {
